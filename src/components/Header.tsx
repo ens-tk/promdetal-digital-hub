@@ -17,48 +17,34 @@ const Header = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [language, setLanguage] = useState<"ru" | "en">("ru");
 
-  const aboutSubmenu = [
-    { title: "История компании", path: "/about#history" },
-    { title: "Миссия и ценности", path: "/about#mission" },
-    { title: "Наша команда", path: "/about#team" },
-    { title: "Сертификаты", path: "/about#certificates" },
-  ];
-
-  const servicesSubmenu = [
-    { title: "Комплексное проектирование", path: "/services/design" },
-    { title: "Комплексная автоматизация производства", path: "/services/automation" },
-    { title: "Пусконаладочные работы", path: "/services/commissioning" },
-    { title: "Сервисное обслуживание", path: "/services/maintenance" },
-  ];
-
   return (
     <header className="sticky top-0 z-50 w-full">
       {/* Top Info Bar */}
-      <div className="bg-industrial-dark text-primary-foreground">
+      <div className="bg-primary text-primary-foreground">
         <div className="container flex items-center justify-between h-10 text-sm">
           <div className="hidden md:flex items-center gap-6">
             <div className="flex items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 text-primary" />
+              <MapPin className="h-3.5 w-3.5" />
               <span>г. Томск, ул. Промышленная, 25</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5 text-primary" />
+              <Clock className="h-3.5 w-3.5" />
               <span>Пн-Пт: 8:00 - 17:00</span>
             </div>
           </div>
           <div className="flex items-center gap-4 md:gap-6 w-full md:w-auto justify-between md:justify-end">
-            <a href="tel:+73822123456" className="flex items-center gap-1.5 hover:text-primary transition-colors">
-              <Phone className="h-3.5 w-3.5 text-primary" />
+            <a href="tel:+73822123456" className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
+              <Phone className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">+7 (3822) 12-34-56</span>
             </a>
-            <a href="mailto:info@promdetal.ru" className="flex items-center gap-1.5 hover:text-primary transition-colors">
-              <Mail className="h-3.5 w-3.5 text-primary" />
+            <a href="mailto:info@promdetal.ru" className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
+              <Mail className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">info@promdetal.ru</span>
             </a>
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 px-2 text-primary-foreground hover:text-primary hover:bg-transparent"
+              className="h-7 px-2 text-primary-foreground hover:bg-primary-foreground/10"
               onClick={() => setSearchOpen(!searchOpen)}
             >
               <Search className="h-4 w-4" />
@@ -66,7 +52,7 @@ const Header = () => {
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 px-2 gap-1 text-primary-foreground hover:text-primary hover:bg-transparent"
+              className="h-7 px-2 gap-1 text-primary-foreground hover:bg-primary-foreground/10"
               onClick={() => setLanguage(language === "ru" ? "en" : "ru")}
             >
               <Globe className="h-4 w-4" />
@@ -92,24 +78,64 @@ const Header = () => {
                   О компании
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-48 gap-1 p-2 bg-background border rounded-md shadow-lg">
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link to="/about" className="block px-3 py-2 text-sm hover:bg-accent rounded-md transition-colors">
-                          Обзор
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    {aboutSubmenu.map((item) => (
-                      <li key={item.path}>
-                        <NavigationMenuLink asChild>
-                          <Link to={item.path} className="block px-3 py-2 text-sm hover:bg-accent rounded-md transition-colors">
-                            {item.title}
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="fixed left-0 right-0 w-screen bg-background border-b shadow-lg">
+                    <div className="container py-6">
+                      <div className="grid grid-cols-2 gap-8">
+                        <div>
+                          <h3 className="font-semibold text-foreground mb-4">О нас</h3>
+                          <ul className="space-y-2">
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link to="/about" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Обзор компании
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link to="/about#history" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  История компании
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link to="/about#mission" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Миссия и ценности
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-foreground mb-4">Дополнительно</h3>
+                          <ul className="space-y-2">
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link to="/about#team" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Наша команда
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link to="/about#certificates" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Сертификаты
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link to="/contacts" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Контакты
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
@@ -126,24 +152,57 @@ const Header = () => {
                   Услуги и сервисы
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-72 gap-1 p-2 bg-background border rounded-md shadow-lg">
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link to="/services" className="block px-3 py-2 text-sm font-medium hover:bg-accent rounded-md transition-colors">
-                          Все услуги
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    {servicesSubmenu.map((item) => (
-                      <li key={item.path}>
-                        <NavigationMenuLink asChild>
-                          <Link to={item.path} className="block px-3 py-2 text-sm hover:bg-accent rounded-md transition-colors">
-                            {item.title}
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="fixed left-0 right-0 w-screen bg-background border-b shadow-lg">
+                    <div className="container py-6">
+                      <div className="grid grid-cols-2 gap-8">
+                        <div>
+                          <h3 className="font-semibold text-foreground mb-4">Проектирование</h3>
+                          <ul className="space-y-2">
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link to="/services" className="block py-2 text-sm font-medium text-primary hover:opacity-80 transition-opacity">
+                                  Все услуги →
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link to="/services/design" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Комплексное проектирование
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link to="/services/automation" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Комплексная автоматизация производства
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-foreground mb-4">Сервис</h3>
+                          <ul className="space-y-2">
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link to="/services/commissioning" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Пусконаладочные работы
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link to="/services/maintenance" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Сервисное обслуживание
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
@@ -207,16 +266,18 @@ const Header = () => {
                 О компании
               </Link>
               <div className="pl-4 space-y-1">
-                {aboutSubmenu.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {item.title}
-                  </Link>
-                ))}
+                <Link to="/about#history" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                  История компании
+                </Link>
+                <Link to="/about#mission" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                  Миссия и ценности
+                </Link>
+                <Link to="/about#team" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                  Наша команда
+                </Link>
+                <Link to="/about#certificates" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                  Сертификаты
+                </Link>
               </div>
             </div>
 
@@ -239,16 +300,18 @@ const Header = () => {
                 Услуги и сервисы
               </Link>
               <div className="pl-4 space-y-1">
-                {servicesSubmenu.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {item.title}
-                  </Link>
-                ))}
+                <Link to="/services/design" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                  Комплексное проектирование
+                </Link>
+                <Link to="/services/automation" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                  Комплексная автоматизация
+                </Link>
+                <Link to="/services/commissioning" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                  Пусконаладочные работы
+                </Link>
+                <Link to="/services/maintenance" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                  Сервисное обслуживание
+                </Link>
               </div>
             </div>
 
