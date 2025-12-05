@@ -139,11 +139,113 @@ const Header = () => {
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
-              {/* Продукты и решения */}
+              {/* Продукты и решения - с подменю */}
               <NavigationMenuItem>
-                <Link to="/equipment" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors px-4 py-2">
+                <NavigationMenuTrigger className="bg-transparent text-sm font-medium text-foreground/80 hover:text-primary hover:bg-transparent data-[state=open]:bg-transparent">
                   Продукты и решения
-                </Link>
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="fixed left-0 right-0 w-screen bg-background border-b shadow-lg">
+                    <div className="container py-6">
+                      <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-lg font-semibold text-foreground">Продукты и решения</h2>
+                        <NavigationMenuLink asChild>
+                          <Link to="/equipment" className="text-sm font-medium text-primary hover:opacity-80 transition-opacity">
+                            Смотреть все →
+                          </Link>
+                        </NavigationMenuLink>
+                      </div>
+                      <div className="grid grid-cols-3 gap-6">
+                        {/* Насосное оборудование */}
+                        <div className="group">
+                          <Link to="/equipment/category/pumps" className="block">
+                            <div className="relative h-40 rounded-lg overflow-hidden mb-3">
+                              <img 
+                                src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=200&fit=crop" 
+                                alt="Насосное оборудование"
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                              <div className="absolute bottom-0 left-0 right-0 p-4">
+                                <h3 className="text-white font-semibold">Насосное оборудование</h3>
+                                <p className="text-white/80 text-sm">Промышленные насосы и системы</p>
+                              </div>
+                            </div>
+                          </Link>
+                          <div className="space-y-1 pl-1">
+                            <Link to="/equipment/category/pumps?type=centrifugal" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+                              Центробежные насосы
+                            </Link>
+                            <Link to="/equipment/category/pumps?type=submersible" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+                              Погружные насосы
+                            </Link>
+                            <Link to="/equipment/category/pumps?type=dosing" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+                              Дозировочные насосы
+                            </Link>
+                          </div>
+                        </div>
+
+                        {/* Компрессорное оборудование */}
+                        <div className="group">
+                          <Link to="/equipment/category/compressors" className="block">
+                            <div className="relative h-40 rounded-lg overflow-hidden mb-3">
+                              <img 
+                                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=200&fit=crop" 
+                                alt="Компрессорное оборудование"
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                              <div className="absolute bottom-0 left-0 right-0 p-4">
+                                <h3 className="text-white font-semibold">Компрессорное оборудование</h3>
+                                <p className="text-white/80 text-sm">Винтовые и поршневые компрессоры</p>
+                              </div>
+                            </div>
+                          </Link>
+                          <div className="space-y-1 pl-1">
+                            <Link to="/equipment/category/compressors?type=screw" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+                              Винтовые компрессоры
+                            </Link>
+                            <Link to="/equipment/category/compressors?type=piston" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+                              Поршневые компрессоры
+                            </Link>
+                            <Link to="/equipment/category/compressors?type=centrifugal" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+                              Центробежные компрессоры
+                            </Link>
+                          </div>
+                        </div>
+
+                        {/* Трубопроводная арматура */}
+                        <div className="group">
+                          <Link to="/equipment/category/valves" className="block">
+                            <div className="relative h-40 rounded-lg overflow-hidden mb-3">
+                              <img 
+                                src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=400&h=200&fit=crop" 
+                                alt="Трубопроводная арматура"
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                              <div className="absolute bottom-0 left-0 right-0 p-4">
+                                <h3 className="text-white font-semibold">Трубопроводная арматура</h3>
+                                <p className="text-white/80 text-sm">Задвижки, клапаны, затворы</p>
+                              </div>
+                            </div>
+                          </Link>
+                          <div className="space-y-1 pl-1">
+                            <Link to="/equipment/category/valves?type=gate" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+                              Задвижки
+                            </Link>
+                            <Link to="/equipment/category/valves?type=ball" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+                              Шаровые краны
+                            </Link>
+                            <Link to="/equipment/category/valves?type=check" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+                              Обратные клапаны
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </NavigationMenuContent>
               </NavigationMenuItem>
 
               {/* Услуги и сервисы - с подменю */}
@@ -282,13 +384,26 @@ const Header = () => {
             </div>
 
             {/* Продукты и решения */}
-            <Link
-              to="/equipment"
-              className="block text-sm font-medium text-foreground/80 hover:text-primary transition-colors py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Продукты и решения
-            </Link>
+            <div className="space-y-1">
+              <Link
+                to="/equipment"
+                className="block text-sm font-medium text-foreground/80 hover:text-primary transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Продукты и решения
+              </Link>
+              <div className="pl-4 space-y-1">
+                <Link to="/equipment/category/pumps" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                  Насосное оборудование
+                </Link>
+                <Link to="/equipment/category/compressors" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                  Компрессорное оборудование
+                </Link>
+                <Link to="/equipment/category/valves" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                  Трубопроводная арматура
+                </Link>
+              </div>
+            </div>
 
             {/* Услуги и сервисы */}
             <div className="space-y-1">
