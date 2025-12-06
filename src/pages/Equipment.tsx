@@ -110,7 +110,7 @@ const Equipment = () => {
                 {category.solutions.map((solution) => (
                   <Link
                     key={solution.id}
-                    to={`/equipment/category/${category.id}?type=${solution.id}`}
+                    to={`/solution/${category.id}-${solution.id}`}
                     className="block text-sm text-muted-foreground hover:text-primary transition-colors py-0.5"
                   >
                     {solution.name}
