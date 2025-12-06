@@ -8,6 +8,7 @@ import Footer from "./components/Footer";
 import Index from "./pages/Index";
 import Equipment from "./pages/Equipment";
 import EquipmentDetail from "./pages/EquipmentDetail";
+import SolutionDetail from "./pages/SolutionDetail";
 import Projects from "./pages/Projects";
 import News from "./pages/News";
 import About from "./pages/About";
@@ -30,6 +31,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/equipment" element={<Equipment />} />
               <Route path="/equipment/:id" element={<EquipmentDetail />} />
+              <Route path="/solution/:id" element={<SolutionDetail />} />
               <Route path="/projects" element={<Projects />} />
               <Route path="/news" element={<News />} />
               <Route path="/about" element={<About />} />
