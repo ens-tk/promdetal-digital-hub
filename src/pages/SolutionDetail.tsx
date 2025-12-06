@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 
 interface Hotspot {
@@ -151,19 +151,21 @@ const SolutionDetail = () => {
           <h2 className="text-2xl font-bold mb-6">Реализованные проекты</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {mockSolution.completedProjects.map((project) => (
-              <Card key={project.id} className="overflow-hidden">
-                <div className="aspect-[4/3]">
-                  <img
-                    src={project.image}
-                    alt={`Проект ${project.year}`}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-4">
-                  <p className="font-bold text-lg">{project.year}</p>
-                  <p className="text-sm text-muted-foreground">{project.location}</p>
-                </div>
-              </Card>
+              <Link key={project.id} to={`/projects/${project.id}`}>
+                <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="aspect-[4/3]">
+                    <img
+                      src={project.image}
+                      alt={`Проект ${project.year}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <p className="font-bold text-lg">{project.year}</p>
+                    <p className="text-sm text-muted-foreground">{project.location}</p>
+                  </div>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>
