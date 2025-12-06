@@ -1,64 +1,92 @@
 import { Link } from "react-router-dom";
-import { Card } from "@/components/ui/card";
-import { Settings, Wrench, Cpu, Factory } from "lucide-react";
 
-const categories = [
+const productCategories = [
   {
-    id: 1,
-    name: "Станки и оборудование",
-    icon: Settings,
-    count: 45,
-    slug: "machines",
+    id: "pumps",
+    name: "Насосное оборудование",
+    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=300&fit=crop",
+    solutions: [
+      { id: "centrifugal", name: "Центробежные насосы" },
+      { id: "submersible", name: "Погружные насосы" },
+      { id: "dosing", name: "Дозировочные насосы" },
+    ],
   },
   {
-    id: 2,
-    name: "Инструменты",
-    icon: Wrench,
-    count: 120,
-    slug: "tools",
+    id: "compressors",
+    name: "Компрессорное оборудование",
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=300&fit=crop",
+    solutions: [
+      { id: "screw", name: "Винтовые компрессоры" },
+      { id: "piston", name: "Поршневые компрессоры" },
+    ],
   },
   {
-    id: 3,
-    name: "Автоматизация",
-    icon: Cpu,
-    count: 32,
-    slug: "automation",
+    id: "valves",
+    name: "Трубопроводная арматура",
+    image: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=400&h=300&fit=crop",
+    solutions: [
+      { id: "gate", name: "Задвижки" },
+      { id: "ball", name: "Шаровые краны" },
+      { id: "check", name: "Обратные клапаны" },
+    ],
   },
   {
-    id: 4,
-    name: "Производственные линии",
-    icon: Factory,
-    count: 18,
-    slug: "lines",
+    id: "drives",
+    name: "Приводная техника",
+    image: "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=400&h=300&fit=crop",
+    solutions: [
+      { id: "motors", name: "Электродвигатели" },
+      { id: "gearboxes", name: "Редукторы" },
+    ],
   },
 ];
 
 const EquipmentCategories = () => {
   return (
-    <section className="py-16">
+    <section className="py-16 bg-muted/30">
       <div className="container">
-        <h2 className="text-3xl md:text-4xl font-bold mb-8">Категории оборудования</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {categories.map((category) => {
-            const Icon = category.icon;
-            return (
-              <Link key={category.id} to={`/equipment/category/${category.slug}`}>
-                <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer group">
-                  <div className="flex flex-col items-center text-center space-y-4">
-                    <div className="p-4 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                      <Icon className="h-8 w-8 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-lg mb-1">{category.name}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {category.count} позиций
-                      </p>
-                    </div>
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold">Продукты и решения</h2>
+          <Link 
+            to="/equipment" 
+            className="text-primary hover:underline font-medium"
+          >
+            Смотреть все →
+          </Link>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {productCategories.map((category) => (
+            <div key={category.id} className="group">
+              {/* Card with Image */}
+              <Link to={`/equipment/category/${category.id}`} className="block">
+                <div className="relative h-40 rounded-lg overflow-hidden mb-3">
+                  <img
+                    src={category.image}
+                    alt={category.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <h3 className="text-white font-semibold text-base">{category.name}</h3>
                   </div>
-                </Card>
+                </div>
               </Link>
-            );
-          })}
+
+              {/* Solutions List - compact */}
+              <div className="space-y-1 pl-1">
+                {category.solutions.map((solution) => (
+                  <Link
+                    key={solution.id}
+                    to={`/solution/${category.id}-${solution.id}`}
+                    className="block text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {solution.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
