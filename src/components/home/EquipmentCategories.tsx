@@ -40,63 +40,50 @@ const productCategories = [
 
 const EquipmentCategories = () => {
   return (
-    <section className="py-20 bg-muted/30">
+    <section className="py-12 bg-muted/30">
       <div className="container">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
-          <div>
-            <span className="text-primary font-medium text-sm uppercase tracking-wider">Каталог</span>
-            <h2 className="text-4xl md:text-5xl font-bold mt-2">
-              Продукты и решения
-            </h2>
-          </div>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl md:text-3xl font-bold">Продукты и решения</h2>
           <Link 
             to="/equipment" 
-            className="group inline-flex items-center gap-2 text-foreground hover:text-primary transition-colors font-medium"
+            className="group inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
           >
             Весь каталог
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
         
-        {/* Categories Grid */}
-        <div className="space-y-8">
+        {/* Compact Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {productCategories.map((category) => (
-            <div key={category.id} className="group">
-              {/* Category Header */}
-              <div className="flex items-center gap-3 mb-4">
-                <Link 
-                  to={`/equipment/category/${category.id}`}
-                  className="text-lg font-semibold hover:text-primary transition-colors"
-                >
-                  {category.name}
-                </Link>
-                <div className="h-px flex-1 bg-border" />
-              </div>
+            <div key={category.id} className="bg-card rounded-lg border border-border p-4">
+              {/* Category Name */}
+              <Link 
+                to={`/equipment/category/${category.id}`}
+                className="text-sm font-semibold text-muted-foreground hover:text-primary transition-colors mb-3 block"
+              >
+                {category.name}
+              </Link>
               
-              {/* Solutions Row */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+              {/* Solutions - horizontal scroll */}
+              <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
                 {category.solutions.map((solution) => (
                   <Link
                     key={solution.id}
                     to={`/solution/${category.id}-${solution.id}`}
-                    className="group/card relative rounded-xl overflow-hidden bg-card border border-border hover:border-primary/50 transition-all hover:shadow-lg"
+                    className="group/card flex-shrink-0 w-28"
                   >
-                    {/* Image */}
-                    <div className="aspect-[4/3] overflow-hidden">
+                    <div className="aspect-square rounded-lg overflow-hidden bg-muted mb-1.5">
                       <img
                         src={solution.image}
                         alt={solution.name}
                         className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
                       />
                     </div>
-                    
-                    {/* Name */}
-                    <div className="p-3">
-                      <h4 className="text-sm font-medium text-foreground group-hover/card:text-primary transition-colors line-clamp-2">
-                        {solution.name}
-                      </h4>
-                    </div>
+                    <span className="text-xs font-medium text-foreground group-hover/card:text-primary transition-colors line-clamp-2 leading-tight">
+                      {solution.name}
+                    </span>
                   </Link>
                 ))}
               </div>
