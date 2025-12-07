@@ -118,20 +118,19 @@ const NewsDetail = () => {
               {latestNews.map((item) => (
                 <Link key={item.id} to={`/news/${item.id}`}>
                   <Card className="overflow-hidden hover:shadow-md transition-shadow">
-                    <div className="flex gap-3 p-3">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="w-20 h-20 object-cover rounded flex-shrink-0"
-                      />
-                      <div className="min-w-0">
-                        <h4 className="font-medium text-sm line-clamp-2 mb-1">
-                          {item.title}
-                        </h4>
-                        <span className="text-xs text-muted-foreground">
-                          {item.date}
-                        </span>
-                      </div>
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-32 object-cover"
+                    />
+                    <div className="p-4">
+                      <h4 className="font-medium text-base line-clamp-2 mb-2">
+                        {item.title}
+                      </h4>
+                      <span className="text-sm text-muted-foreground flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5" />
+                        {item.date}
+                      </span>
                     </div>
                   </Card>
                 </Link>
