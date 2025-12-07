@@ -1,65 +1,49 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Cog, Gauge, PipetteIcon, Zap } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const productCategories = [
   {
     id: "pumps",
     name: "Насосное оборудование",
-    description: "Надёжные решения для перекачки",
-    icon: Gauge,
-    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&h=400&fit=crop",
     solutions: [
-      { id: "centrifugal", name: "Центробежные насосы" },
-      { id: "submersible", name: "Погружные насосы" },
-      { id: "dosing", name: "Дозировочные насосы" },
+      { id: "centrifugal", name: "Центробежные насосы", image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=300&h=200&fit=crop" },
+      { id: "submersible", name: "Погружные насосы", image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=300&h=200&fit=crop" },
+      { id: "dosing", name: "Дозировочные насосы", image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=300&h=200&fit=crop" },
     ],
-    featured: true,
   },
   {
     id: "compressors",
     name: "Компрессорное оборудование",
-    description: "Промышленные компрессоры",
-    icon: Zap,
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&h=400&fit=crop",
     solutions: [
-      { id: "screw", name: "Винтовые компрессоры" },
-      { id: "piston", name: "Поршневые компрессоры" },
+      { id: "screw", name: "Винтовые компрессоры", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=300&h=200&fit=crop" },
+      { id: "piston", name: "Поршневые компрессоры", image: "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=300&h=200&fit=crop" },
     ],
-    featured: false,
   },
   {
     id: "valves",
     name: "Трубопроводная арматура",
-    description: "Запорная и регулирующая арматура",
-    icon: PipetteIcon,
-    image: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=600&h=400&fit=crop",
     solutions: [
-      { id: "gate", name: "Задвижки" },
-      { id: "ball", name: "Шаровые краны" },
-      { id: "check", name: "Обратные клапаны" },
+      { id: "gate", name: "Задвижки", image: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=300&h=200&fit=crop" },
+      { id: "ball", name: "Шаровые краны", image: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=300&h=200&fit=crop" },
+      { id: "check", name: "Обратные клапаны", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop" },
     ],
-    featured: false,
   },
   {
     id: "drives",
     name: "Приводная техника",
-    description: "Двигатели и редукторы",
-    icon: Cog,
-    image: "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=600&h=400&fit=crop",
     solutions: [
-      { id: "motors", name: "Электродвигатели" },
-      { id: "gearboxes", name: "Редукторы" },
+      { id: "motors", name: "Электродвигатели", image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=300&h=200&fit=crop" },
+      { id: "gearboxes", name: "Редукторы", image: "https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?w=300&h=200&fit=crop" },
     ],
-    featured: true,
   },
 ];
 
 const EquipmentCategories = () => {
   return (
-    <section className="py-20 bg-gradient-to-b from-background to-muted/30">
+    <section className="py-20 bg-muted/30">
       <div className="container">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
           <div>
             <span className="text-primary font-medium text-sm uppercase tracking-wider">Каталог</span>
             <h2 className="text-4xl md:text-5xl font-bold mt-2">
@@ -75,69 +59,49 @@ const EquipmentCategories = () => {
           </Link>
         </div>
         
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-[200px]">
-          {productCategories.map((category, index) => {
-            const Icon = category.icon;
-            const isLarge = category.featured;
-            
-            return (
-              <div 
-                key={category.id} 
-                className={`group relative rounded-2xl overflow-hidden ${
-                  isLarge ? 'md:row-span-2' : ''
-                }`}
-              >
-                {/* Background Image */}
-                <img
-                  src={category.image}
-                  alt={category.name}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20" />
-                
-                {/* Content */}
-                <div className="relative h-full p-6 flex flex-col justify-between">
-                  {/* Icon Badge */}
-                  <div className="self-start">
-                    <div className="w-12 h-12 rounded-xl bg-primary/20 backdrop-blur-sm border border-primary/30 flex items-center justify-center">
-                      <Icon className="w-6 h-6 text-primary" />
-                    </div>
-                  </div>
-                  
-                  {/* Bottom Content */}
-                  <div>
-                    <Link to={`/equipment/category/${category.id}`}>
-                      <h3 className="text-white font-bold text-xl mb-1 group-hover:text-primary transition-colors">
-                        {category.name}
-                      </h3>
-                    </Link>
-                    <p className="text-white/60 text-sm mb-4">{category.description}</p>
-                    
-                    {/* Solutions */}
-                    <div className="flex flex-wrap gap-2">
-                      {category.solutions.slice(0, isLarge ? 3 : 2).map((solution) => (
-                        <Link
-                          key={solution.id}
-                          to={`/solution/${category.id}-${solution.id}`}
-                          className="text-xs px-3 py-1.5 rounded-full bg-white/10 text-white/80 hover:bg-primary hover:text-primary-foreground transition-colors backdrop-blur-sm border border-white/10"
-                        >
-                          {solution.name}
-                        </Link>
-                      ))}
-                      {category.solutions.length > (isLarge ? 3 : 2) && (
-                        <span className="text-xs px-3 py-1.5 rounded-full bg-white/5 text-white/50">
-                          +{category.solutions.length - (isLarge ? 3 : 2)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
+        {/* Categories Grid */}
+        <div className="space-y-8">
+          {productCategories.map((category) => (
+            <div key={category.id} className="group">
+              {/* Category Header */}
+              <div className="flex items-center gap-3 mb-4">
+                <Link 
+                  to={`/equipment/category/${category.id}`}
+                  className="text-lg font-semibold hover:text-primary transition-colors"
+                >
+                  {category.name}
+                </Link>
+                <div className="h-px flex-1 bg-border" />
               </div>
-            );
-          })}
+              
+              {/* Solutions Row */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+                {category.solutions.map((solution) => (
+                  <Link
+                    key={solution.id}
+                    to={`/solution/${category.id}-${solution.id}`}
+                    className="group/card relative rounded-xl overflow-hidden bg-card border border-border hover:border-primary/50 transition-all hover:shadow-lg"
+                  >
+                    {/* Image */}
+                    <div className="aspect-[4/3] overflow-hidden">
+                      <img
+                        src={solution.image}
+                        alt={solution.name}
+                        className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    
+                    {/* Name */}
+                    <div className="p-3">
+                      <h4 className="text-sm font-medium text-foreground group-hover/card:text-primary transition-colors line-clamp-2">
+                        {solution.name}
+                      </h4>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
