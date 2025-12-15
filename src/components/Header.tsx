@@ -80,7 +80,7 @@ const Header = () => {
                 <NavigationMenuContent>
                   <div className="fixed left-0 right-0 w-screen bg-background border-b shadow-lg">
                     <div className="container py-6">
-                      <div className="grid grid-cols-2 gap-8">
+                      <div className="grid grid-cols-3 gap-8">
                         <div>
                           <h3 className="font-semibold text-foreground mb-4">О нас</h3>
                           <ul className="space-y-2">
@@ -93,15 +93,41 @@ const Header = () => {
                             </li>
                             <li>
                               <NavigationMenuLink asChild>
-                                <Link to="/about#history" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                <Link to="/about?tab=history" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
                                   История компании
                                 </Link>
                               </NavigationMenuLink>
                             </li>
                             <li>
                               <NavigationMenuLink asChild>
-                                <Link to="/about#mission" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                <Link to="/about?tab=mission" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
                                   Миссия и ценности
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-foreground mb-4">Документы</h3>
+                          <ul className="space-y-2">
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link to="/about?tab=reviews" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Отзывы
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link to="/about?tab=docs" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Документация
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link to="/about?tab=requisites" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Реквизиты
                                 </Link>
                               </NavigationMenuLink>
                             </li>
@@ -112,15 +138,15 @@ const Header = () => {
                           <ul className="space-y-2">
                             <li>
                               <NavigationMenuLink asChild>
-                                <Link to="/about#team" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                                  Наша команда
+                                <Link to="/projects" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Реализованные проекты
                                 </Link>
                               </NavigationMenuLink>
                             </li>
                             <li>
                               <NavigationMenuLink asChild>
-                                <Link to="/about#certificates" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                                  Сертификаты
+                                <Link to="/news" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Пресс-центр
                                 </Link>
                               </NavigationMenuLink>
                             </li>
@@ -271,17 +297,20 @@ const Header = () => {
                 О компании
               </Link>
               <div className="pl-4 space-y-1">
-                <Link to="/about#history" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                <Link to="/about?tab=history" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
                   История компании
                 </Link>
-                <Link to="/about#mission" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                <Link to="/about?tab=mission" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
                   Миссия и ценности
                 </Link>
-                <Link to="/about#team" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
-                  Наша команда
+                <Link to="/about?tab=reviews" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                  Отзывы
                 </Link>
-                <Link to="/about#certificates" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
-                  Сертификаты
+                <Link to="/about?tab=docs" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                  Документация
+                </Link>
+                <Link to="/about?tab=requisites" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
+                  Реквизиты
                 </Link>
               </div>
             </div>
