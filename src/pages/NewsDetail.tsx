@@ -109,10 +109,10 @@ const NewsDetail = () => {
             />
           </div>
 
-          {/* Sidebar - Latest News */}
+          {/* Sidebar - Related News */}
           <aside>
             <h3 className="text-lg font-semibold mb-4 pb-2 border-b border-border">
-              Последние новости
+              Также интересно
             </h3>
             <div className="space-y-4">
               {latestNews.map((item) => (

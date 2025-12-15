@@ -134,19 +134,19 @@ const Header = () => {
                           </ul>
                         </div>
                         <div>
-                          <h3 className="font-semibold text-foreground mb-4">Дополнительно</h3>
+                          <h3 className="font-semibold text-foreground mb-4">Пресс-центр</h3>
                           <ul className="space-y-2">
                             <li>
                               <NavigationMenuLink asChild>
-                                <Link to="/projects" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                                  Реализованные проекты
+                                <Link to="/articles" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Статьи
                                 </Link>
                               </NavigationMenuLink>
                             </li>
                             <li>
                               <NavigationMenuLink asChild>
-                                <Link to="/news" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                                  Пресс-центр
+                                <Link to="/projects" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                  Реализованные проекты
                                 </Link>
                               </NavigationMenuLink>
                             </li>
