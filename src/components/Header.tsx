@@ -11,6 +11,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import ensLogo from "@/assets/ens-logo.jpg";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -66,7 +67,7 @@ const Header = () => {
       <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
-            <div className="text-2xl font-bold text-primary">Промдеталь</div>
+            <img src={ensLogo} alt="ENS Group" className="h-12 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
