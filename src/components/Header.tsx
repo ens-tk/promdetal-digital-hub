@@ -67,7 +67,7 @@ const Header = () => {
       <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
-            <img src={ensLogo} alt="ENS Group" className="h-12 w-auto" />
+            <img src={ensLogo} alt="ENS Group" className="h-14 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
