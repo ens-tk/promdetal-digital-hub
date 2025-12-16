@@ -18,6 +18,7 @@ import ArticleDetail from "./pages/ArticleDetail";
 import About from "./pages/About";
 import Contacts from "./pages/Contacts";
 import Services from "./pages/Services";
+import ServiceDetail from "./pages/ServiceDetail";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminLayout from "./components/admin/AdminLayout";
@@ -52,7 +53,7 @@ const App = () => (
               <Route path="/about" element={<About />} />
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/services" element={<Services />} />
-              <Route path="/services/:id" element={<Services />} />
+              <Route path="/services/:serviceId" element={<ServiceDetail />} />
               {/* Admin routes */}
               <Route path="/admin" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminLayout />}>
