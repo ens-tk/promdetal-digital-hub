@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import PrivateRoute from "@/router/PrivateRoute";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Index from "./pages/Index";
@@ -55,14 +56,18 @@ const App = () => (
               <Route path="/services" element={<Services />} />
               <Route path="/services/:serviceId" element={<ServiceDetail />} />
               {/* Admin routes */}
-              <Route path="/admin" element={<AdminLogin />} />
-              <Route path="/admin" element={<AdminLayout />}>
+              <Route element={<PrivateRoute />}>
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                              <Route path="/admin" element={<AdminLayout />}>
                 <Route path="dashboard" element={<AdminDashboard />} />
                 <Route path="news" element={<AdminNews />} />
                 <Route path="equipment-groups" element={<AdminEquipmentGroups />} />
                 <Route path="equipment" element={<AdminEquipment />} />
                 <Route path="solutions" element={<AdminSolutions />} />
               </Route>
+              </Route>
+              <Route path="/login" element={<AdminLogin />} />
+
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

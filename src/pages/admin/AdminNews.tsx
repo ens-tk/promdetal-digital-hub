@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -17,92 +22,162 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, Search } from "lucide-react";
 import { toast } from "sonner";
 
 interface NewsItem {
-  id: string;
+  id: number;
   title: string;
-  date: string;
-  excerpt: string;
   content: string;
-  image: string;
+  createdAt: string;
+  coverImage?: { id: string } | null; // только id
 }
 
-const mockNews: NewsItem[] = [
-  { id: "1", title: "Новое оборудование в каталоге", date: "15 декабря 2024", excerpt: "Мы расширили ассортимент...", content: "Полный текст новости...", image: "/placeholder.svg" },
-  { id: "2", title: "Участие в выставке", date: "10 декабря 2024", excerpt: "Компания приняла участие...", content: "Полный текст новости...", image: "/placeholder.svg" },
-];
-
 const AdminNews = () => {
-  const [news, setNews] = useState<NewsItem[]>(mockNews);
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [images, setImages] = useState<Record<number, string>>({});
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<NewsItem | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
+
   const [formData, setFormData] = useState({
     title: "",
-    excerpt: "",
     content: "",
-    image: "",
+    coverImage: null as File | null,
   });
 
-  const filteredNews = news.filter(item =>
+  // ------------------------
+  // Load news + fetch images
+  // ------------------------
+  const loadNews = async () => {
+    setLoading(true);
+    try {
+      const res = await api.get("/news");
+      const data: NewsItem[] = Array.isArray(res.data) ? res.data : [];
+      setNews(data);
+
+      // Загружаем картинки для таблицы
+      data.forEach(async (item) => {
+        if (item.coverImage && !images[item.id]) {
+          try {
+            const imgRes = await api.get(`/Files/${item.coverImage.id}`, { responseType: "blob" });
+            const url = URL.createObjectURL(imgRes.data);
+            setImages((prev) => ({ ...prev, [item.id]: url }));
+          } catch {
+            // Игнорируем ошибки загрузки отдельных изображений
+          }
+        }
+      });
+    } catch {
+      toast.error("Ошибка загрузки новостей");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadNews();
+  }, []);
+
+  // ------------------------
+  // Filter
+  // ------------------------
+  const filteredNews = news.filter((item) =>
     item.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleCreate = () => {
-    setEditingItem(null);
-    setFormData({ title: "", excerpt: "", content: "", image: "" });
-    setIsDialogOpen(true);
+  // ------------------------
+  // Upload file
+  // ------------------------
+  const uploadFile = async (file: File) => {
+    const data = new FormData();
+    data.append("file", file);
+    const res = await api.post("/Files", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data.id;
   };
 
+  // ------------------------
+  // Edit / Create
+  // ------------------------
   const handleEdit = (item: NewsItem) => {
+    setIsCreating(false);
     setEditingItem(item);
     setFormData({
       title: item.title,
-      excerpt: item.excerpt,
-      content: item.content,
-      image: item.image,
+      content: item.content || "",
+      coverImage: null,
     });
     setIsDialogOpen(true);
   };
 
-  const handleDelete = (id: string) => {
-    // TODO: Replace with actual API call
-    setNews(news.filter(item => item.id !== id));
-    toast.success("Новость удалена");
+  const handleCreate = () => {
+    setIsCreating(true);
+    setEditingItem(null);
+    setFormData({
+      title: "",
+      content: "",
+      coverImage: null,
+    });
+    setIsDialogOpen(true);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (editingItem) {
-      // Update existing
-      setNews(news.map(item => 
-        item.id === editingItem.id 
-          ? { ...item, ...formData, date: item.date }
-          : item
-      ));
-      toast.success("Новость обновлена");
-    } else {
-      // Create new
-      const newItem: NewsItem = {
-        id: Date.now().toString(),
-        ...formData,
-        date: new Date().toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }),
-      };
-      setNews([newItem, ...news]);
-      toast.success("Новость создана");
+
+    try {
+      let coverImage = formData.coverImage ? { id: await uploadFile(formData.coverImage) } : null;
+
+      if (isCreating) {
+        await api.post("/news", {
+          title: formData.title,
+          content: formData.content,
+          coverImage,
+        });
+        toast.success("Новость создана");
+      } else if (editingItem) {
+        coverImage = coverImage || editingItem.coverImage || null;
+        await api.put(`/news/${editingItem.id}`, {
+          title: formData.title,
+          content: formData.content,
+          coverImage,
+        });
+        toast.success("Новость обновлена");
+      }
+
+      setIsDialogOpen(false);
+      loadNews();
+    } catch (err) {
+      console.error(err);
+      toast.error("Ошибка при сохранении");
     }
-    
-    setIsDialogOpen(false);
   };
 
+  // ------------------------
+  // Delete
+  // ------------------------
+  const handleDelete = async (id: number) => {
+    if (!confirm("Удалить новость?")) return;
+    try {
+      await api.delete(`/news/${id}`);
+      toast.success("Новость удалена");
+      setNews((prev) => prev.filter((n) => n.id !== id));
+    } catch {
+      toast.error("Ошибка при удалении");
+    }
+  };
+
+  // ------------------------
+  // Render
+  // ------------------------
   return (
     <div>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+      <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Новости</h1>
         <Button onClick={handleCreate}>
           <Plus className="w-4 h-4 mr-2" />
@@ -115,98 +190,129 @@ const AdminNews = () => {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="Поиск по названию..."
+              placeholder="Поиск..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
             />
           </div>
         </CardHeader>
+
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Изображение</TableHead>
-                <TableHead>Название</TableHead>
-                <TableHead>Дата</TableHead>
-                <TableHead className="text-right">Действия</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredNews.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>
-                    <img src={item.image} alt="" className="w-16 h-12 object-cover rounded" />
-                  </TableCell>
-                  <TableCell className="font-medium">{item.title}</TableCell>
-                  <TableCell>{item.date}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}>
-                        <Pencil className="w-4 h-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleDelete(item.id)}>
-                        <Trash2 className="w-4 h-4 text-destructive" />
-                      </Button>
-                    </div>
-                  </TableCell>
+          {loading ? (
+            <p className="text-muted-foreground">Загрузка...</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Изображение</TableHead>
+                  <TableHead>Название</TableHead>
+                  <TableHead>Дата</TableHead>
+                  <TableHead className="text-right">Действия</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+
+              <TableBody>
+                {filteredNews.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell>
+                      <img
+                        src={images[item.id] || "/placeholder.svg"}
+                        className="w-16 h-12 object-cover rounded"
+                      />
+                    </TableCell>
+                    <TableCell className="font-medium">{item.title}</TableCell>
+                    <TableCell>
+                      {new Date(item.createdAt).toLocaleDateString("ru-RU")}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleEdit(item)}
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDelete(item.id)}
+                        >
+                          <Trash2 className="w-4 h-4 text-destructive" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+
+                {filteredNews.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-center text-muted-foreground">
+                      Ничего не найдено
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
 
+      {/* Dialog для создания / редактирования */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              {editingItem ? "Редактировать новость" : "Новая новость"}
-            </DialogTitle>
+            <DialogTitle>{isCreating ? "Создать новость" : "Редактировать новость"}</DialogTitle>
           </DialogHeader>
+
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="title">Название</Label>
+            <div>
+              <Label>Название</Label>
               <Input
-                id="title"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 required
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="image">URL изображения</Label>
-              <Input
-                id="image"
-                value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="excerpt">Краткое описание</Label>
+
+            <div>
+              <Label>Содержание</Label>
               <Textarea
-                id="excerpt"
-                value={formData.excerpt}
-                onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                rows={2}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="content">Полный текст</Label>
-              <Textarea
-                id="content"
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                rows={6}
+                rows={4}
               />
             </div>
+
+            <div>
+              <Label>Картинка</Label>
+              {/* Текущая картинка только при редактировании */}
+              {!isCreating && editingItem?.coverImage && !formData.coverImage && (
+                <p className="text-sm text-muted-foreground mb-1">
+                  {`Текущая картинка: ${editingItem.coverImage.id}`}
+                </p>
+              )}
+              {formData.coverImage && (
+                <p className="text-sm text-muted-foreground mb-1">
+                  {`Выбран файл: ${formData.coverImage.name}`}
+                </p>
+              )}
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) setFormData({ ...formData, coverImage: file });
+                }}
+              />
+            </div>
+
             <div className="flex justify-end gap-3">
               <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                 Отмена
               </Button>
-              <Button type="submit">
-                {editingItem ? "Сохранить" : "Создать"}
-              </Button>
+              <Button type="submit">{isCreating ? "Создать" : "Сохранить"}</Button>
             </div>
           </form>
         </DialogContent>

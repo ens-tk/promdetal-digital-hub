@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Eye, EyeOff, LogIn } from "lucide-react";
+import { api } from "@/lib/api";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -15,23 +16,27 @@ const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    // TODO: Replace with actual API call to your backend
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes - replace with actual auth logic
-      toast.success("Успешный вход в систему");
-      navigate("/admin/dashboard");
-    } catch (error) {
-      toast.error("Ошибка авторизации");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  e.preventDefault();
+  setIsLoading(true);
+
+  try {
+    const response = await api.post("/auth/login", {
+      username: email, // если у тебя username = email
+      password,
+    });
+
+    // 🔑 сохраняем JWT
+    localStorage.setItem("token", response.data.token);
+
+    toast.success("Успешный вход в систему");
+    navigate("/admin/dashboard");
+  } catch (error: any) {
+    toast.error("Неверный логин или пароль");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
