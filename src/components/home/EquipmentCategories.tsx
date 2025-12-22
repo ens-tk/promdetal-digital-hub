@@ -92,14 +92,14 @@ const EquipmentCategories = () => {
                   
                   {/* Category name */}
                   <div>
-                    <span className={`font-medium text-sm md:text-base transition-colors ${
+                    <span className={`font-semibold text-base md:text-lg transition-colors ${
                       activeCategory === category.id ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'
                     }`}>
                       {category.name}
                     </span>
                     {/* Description - показывается только для активной */}
                     {activeCategory === category.id && (
-                      <p className="text-xs text-muted-foreground mt-0.5 max-w-[200px] animate-fade-in">
+                      <p className="text-sm text-muted-foreground mt-1 max-w-[280px] animate-fade-in">
                         {category.description}
                       </p>
                     )}
