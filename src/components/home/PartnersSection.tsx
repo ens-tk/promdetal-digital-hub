@@ -1,13 +1,21 @@
-const partners = [
-  { id: 1, name: "Партнёр 1", logo: "/placeholder.svg" },
-  { id: 2, name: "Партнёр 2", logo: "/placeholder.svg" },
-  { id: 3, name: "Партнёр 3", logo: "/placeholder.svg" },
-  { id: 4, name: "Партнёр 4", logo: "/placeholder.svg" },
-  { id: 5, name: "Партнёр 5", logo: "/placeholder.svg" },
-  { id: 6, name: "Партнёр 6", logo: "/placeholder.svg" },
-];
+import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
+
+interface Partner {
+  id: number;
+  name: string;
+  logo: string;
+}
 
 const PartnersSection = () => {
+  const [partners, setPartners] = useState<Partner[]>([]);
+
+  useEffect(() => {
+    api.get("/partners")
+      .then(res => setPartners(res.data))
+      .catch(err => console.error(err));
+  }, []);
+
   return (
     <section className="py-16 bg-muted">
       <div className="container">
