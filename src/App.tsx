@@ -28,6 +28,7 @@ import AdminNews from "./pages/admin/AdminNews";
 import AdminEquipmentGroups from "./pages/admin/AdminEquipmentGroups";
 import AdminEquipment from "./pages/admin/AdminEquipment";
 import AdminSolutions from "./pages/admin/AdminSolutions";
+import AdminArticles from "./pages/admin/AdminArticles";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +65,7 @@ const App = () => (
                 <Route path="equipment-groups" element={<AdminEquipmentGroups />} />
                 <Route path="equipment" element={<AdminEquipment />} />
                 <Route path="solutions" element={<AdminSolutions />} />
+                <Route path="articles" element={<AdminArticles />} />
               </Route>
               </Route>
               <Route path="/login" element={<AdminLogin />} />

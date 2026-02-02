@@ -8,7 +8,8 @@ import {
   Lightbulb,
   LogOut,
   Menu,
-  X
+  X,
+  FileText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -16,6 +17,7 @@ import { useState } from "react";
 const menuItems = [
   { title: "Дашборд", href: "/admin/dashboard", icon: LayoutDashboard },
   { title: "Новости", href: "/admin/news", icon: Newspaper },
+  { title: "Статьи", href: "/admin/articles", icon: FileText },
   { title: "Группы оборудования", href: "/admin/equipment-groups", icon: Layers },
   { title: "Оборудование", href: "/admin/equipment", icon: Wrench },
   { title: "Решения", href: "/admin/solutions", icon: Lightbulb },
