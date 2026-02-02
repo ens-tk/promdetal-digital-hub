@@ -3,7 +3,7 @@ import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import {
   Card,
   CardContent,
@@ -278,10 +278,9 @@ const AdminNews = () => {
 
             <div>
               <Label>Содержание</Label>
-              <Textarea
+              <RichTextEditor
                 value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                rows={4}
+                onChange={(content) => setFormData({ ...formData, content })}
               />
             </div>
 
