@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Table,
@@ -18,7 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Upload } from "lucide-react";
 import { toast } from "sonner";
 
 interface EquipmentGroup {
@@ -26,6 +26,7 @@ interface EquipmentGroup {
   name: string;
   description: string;
   image: string;
+  imageFile?: File | null;
   equipmentCount: number;
 }
 
@@ -43,7 +44,8 @@ const AdminEquipmentGroups = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    image: "",
+    imageFile: null as File | null,
+    imagePreview: "",
   });
 
   const filteredGroups = groups.filter(item =>
@@ -52,7 +54,7 @@ const AdminEquipmentGroups = () => {
 
   const handleCreate = () => {
     setEditingItem(null);
-    setFormData({ name: "", description: "", image: "" });
+    setFormData({ name: "", description: "", imageFile: null, imagePreview: "" });
     setIsDialogOpen(true);
   };
 
@@ -61,9 +63,18 @@ const AdminEquipmentGroups = () => {
     setFormData({
       name: item.name,
       description: item.description,
-      image: item.image,
+      imageFile: null,
+      imagePreview: item.image,
     });
     setIsDialogOpen(true);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setFormData({ ...formData, imageFile: file, imagePreview: previewUrl });
+    }
   };
 
   const handleDelete = (id: string) => {
@@ -74,17 +85,21 @@ const AdminEquipmentGroups = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    const imageUrl = formData.imagePreview || "/placeholder.svg";
+    
     if (editingItem) {
       setGroups(groups.map(item => 
         item.id === editingItem.id 
-          ? { ...item, ...formData }
+          ? { ...item, name: formData.name, description: formData.description, image: imageUrl }
           : item
       ));
       toast.success("Группа обновлена");
     } else {
       const newItem: EquipmentGroup = {
         id: Date.now().toString(),
-        ...formData,
+        name: formData.name,
+        description: formData.description,
+        image: imageUrl,
         equipmentCount: 0,
       };
       setGroups([newItem, ...groups]);
@@ -171,20 +186,39 @@ const AdminEquipmentGroups = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="image">URL изображения</Label>
-              <Input
-                id="image"
-                value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-              />
+              <Label>Изображение</Label>
+              {formData.imagePreview && (
+                <div className="mb-2">
+                  <img 
+                    src={formData.imagePreview} 
+                    alt="Preview" 
+                    className="w-32 h-24 object-cover rounded border"
+                  />
+                </div>
+              )}
+              <div className="flex items-center gap-2">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                  id="group-image-upload"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => document.getElementById("group-image-upload")?.click()}
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  {formData.imagePreview ? "Изменить картинку" : "Загрузить картинку"}
+                </Button>
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="description">Описание</Label>
-              <Textarea
-                id="description"
+              <RichTextEditor
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                rows={3}
+                onChange={(description) => setFormData({ ...formData, description })}
               />
             </div>
             <div className="flex justify-end gap-3">
