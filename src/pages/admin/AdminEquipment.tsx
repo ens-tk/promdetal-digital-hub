@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Pencil, Trash2, Search, X, MapPin } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, X, MapPin, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -54,6 +54,7 @@ interface Equipment {
   shortDescription: string;
   longDescription: string;
   image: string;
+  hotspotImage: string;
   showOnHomepage: boolean;
   advantages: Advantage[];
   hotspots: Hotspot[];
@@ -75,6 +76,7 @@ const mockEquipment: Equipment[] = [
     longDescription:
       "Центробежный насос ЦН-100 предназначен для перекачивания чистых жидкостей. Отличается высокой надёжностью и эффективностью.",
     image: "/placeholder.svg",
+    hotspotImage: "/placeholder.svg",
     showOnHomepage: true,
     advantages: [
       { id: "1", iconId: "zap", text: "Энергоэффективность" },
@@ -91,6 +93,7 @@ const mockEquipment: Equipment[] = [
     longDescription:
       "Винтовой компрессор ВК-50 идеально подходит для промышленного применения. Низкий уровень шума и вибраций.",
     image: "/placeholder.svg",
+    hotspotImage: "/placeholder.svg",
     showOnHomepage: false,
     advantages: [],
     hotspots: [],
@@ -108,10 +111,17 @@ const AdminEquipment = () => {
     shortDescription: "",
     longDescription: "",
     image: "",
+    hotspotImage: "",
     showOnHomepage: false,
     advantages: [],
     hotspots: [],
   });
+  
+  // File upload states
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [hotspotImageFile, setHotspotImageFile] = useState<File | null>(null);
+  const [hotspotImagePreview, setHotspotImagePreview] = useState<string>("");
 
   // Icon picker state
   const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
@@ -134,10 +144,15 @@ const AdminEquipment = () => {
       shortDescription: "",
       longDescription: "",
       image: "",
+      hotspotImage: "",
       showOnHomepage: false,
       advantages: [],
       hotspots: [],
     });
+    setImageFile(null);
+    setImagePreview("");
+    setHotspotImageFile(null);
+    setHotspotImagePreview("");
     setIsDialogOpen(true);
   };
 
@@ -149,10 +164,15 @@ const AdminEquipment = () => {
       shortDescription: item.shortDescription,
       longDescription: item.longDescription,
       image: item.image,
+      hotspotImage: item.hotspotImage,
       showOnHomepage: item.showOnHomepage,
       advantages: [...item.advantages],
       hotspots: [...item.hotspots],
     });
+    setImageFile(null);
+    setImagePreview(item.image);
+    setHotspotImageFile(null);
+    setHotspotImagePreview(item.hotspotImage);
     setIsDialogOpen(true);
   };
 
@@ -384,33 +404,83 @@ const AdminEquipment = () => {
                 />
               </div>
 
-              {/* Image URL */}
+              {/* Main Image - File Upload */}
               <div className="space-y-2">
-                <Label htmlFor="image">URL изображения</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="image"
-                    value={formData.image}
-                    onChange={(e) =>
-                      setFormData({ ...formData, image: e.target.value })
-                    }
-                    placeholder="https://..."
-                    className="flex-1"
+                <Label>Основное изображение</Label>
+                <div className="flex items-center gap-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => document.getElementById("mainImageInput")?.click()}
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    Выбрать файл
+                  </Button>
+                  <input
+                    id="mainImageInput"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setImageFile(file);
+                        setImagePreview(URL.createObjectURL(file));
+                      }
+                    }}
+                  />
+                  {imageFile && (
+                    <span className="text-sm text-muted-foreground">{imageFile.name}</span>
+                  )}
+                </div>
+                {imagePreview && (
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="w-full max-w-xs h-32 object-cover rounded border mt-2"
+                  />
+                )}
+              </div>
+
+              {/* Hotspot Image - File Upload */}
+              <div className="space-y-2">
+                <Label>Изображение для интерактивных точек</Label>
+                <div className="flex items-center gap-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => document.getElementById("hotspotImageInput")?.click()}
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    Выбрать файл
+                  </Button>
+                  <input
+                    id="hotspotImageInput"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setHotspotImageFile(file);
+                        setHotspotImagePreview(URL.createObjectURL(file));
+                      }
+                    }}
                   />
                   <Button
                     type="button"
                     variant="outline"
                     onClick={() => setIsHotspotEditorOpen(true)}
-                    disabled={!formData.image}
+                    disabled={!hotspotImagePreview}
                   >
                     <MapPin className="w-4 h-4 mr-2" />
                     Точки ({formData.hotspots.length})
                   </Button>
                 </div>
-                {formData.image && (
+                {hotspotImagePreview && (
                   <img
-                    src={formData.image}
-                    alt="Preview"
+                    src={hotspotImagePreview}
+                    alt="Hotspot Preview"
                     className="w-full max-w-xs h-32 object-cover rounded border mt-2"
                   />
                 )}
@@ -530,7 +600,7 @@ const AdminEquipment = () => {
       <ImageHotspotEditor
         open={isHotspotEditorOpen}
         onOpenChange={setIsHotspotEditorOpen}
-        imageUrl={formData.image}
+        imageUrl={hotspotImagePreview}
         hotspots={formData.hotspots}
         onHotspotsChange={(hotspots) => setFormData({ ...formData, hotspots })}
       />
