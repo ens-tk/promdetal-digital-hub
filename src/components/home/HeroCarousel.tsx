@@ -1,66 +1,95 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { api } from "@/lib/api";
 
-const mockProjects = [
-  {
-    id: 1,
-    title: "Автоматизированная линия для завода",
-    description: "Комплексное решение для производства деталей",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 2,
-    title: "Промышленное оборудование для металлообработки",
-    description: "Высокоточное оборудование для точной обработки",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 3,
-    title: "Система автоматизации склада",
-    description: "Современные решения для логистики",
-    image: "/placeholder.svg",
-  },
-];
+interface EquipmentItem {
+  id: number;
+  title: string;
+  shortDescription: string;
+  imageIds: string[];
+}
 
 const HeroCarousel = () => {
+  const [items, setItems] = useState<EquipmentItem[]>([]);
+  const [images, setImages] = useState<Record<number, string>>({});
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % mockProjects.length);
-  };
+  // ------------------------
+  // Load equipment for main
+  // ------------------------
+  const loadEquipment = async () => {
+    try {
+      const res = await api.get("/equipment/main");
+      const data: EquipmentItem[] = Array.isArray(res.data) ? res.data : [];
+      setItems(data);
 
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + mockProjects.length) % mockProjects.length);
+      // Загружаем первую картинку
+      data.forEach(async (item) => {
+        const imageId = item.imageIds?.[0];
+        if (imageId && !images[item.id]) {
+          const imgRes = await api.get(`/Files/${imageId}`, {
+            responseType: "blob",
+          });
+          const url = URL.createObjectURL(imgRes.data);
+          setImages((prev) => ({ ...prev, [item.id]: url }));
+        }
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
-    const timer = setInterval(nextSlide, 5000);
-    return () => clearInterval(timer);
+    loadEquipment();
   }, []);
 
+  // ------------------------
+  // Slider logic
+  // ------------------------
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev + 1) % items.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
+  };
+
+  useEffect(() => {
+    if (!items.length) return;
+    const timer = setInterval(nextSlide, 5000);
+    return () => clearInterval(timer);
+  }, [items]);
+
+  if (!items.length) return null;
+
+  // ------------------------
+  // Render
+  // ------------------------
   return (
     <div className="relative w-full h-[500px] overflow-hidden rounded-lg bg-muted">
-      {mockProjects.map((project, index) => (
+      {items.map((item, index) => (
         <div
-          key={project.id}
+          key={item.id}
           className={`absolute inset-0 transition-opacity duration-500 ${
             index === currentIndex ? "opacity-100" : "opacity-0"
           }`}
         >
           <div className="relative h-full w-full">
             <img
-              src={project.image}
-              alt={project.title}
+              src={images[item.id] || "/placeholder.svg"}
+              alt={item.title}
               className="h-full w-full object-cover"
             />
+
             <div className="absolute inset-0 bg-gradient-to-r from-industrial-dark/80 to-transparent" />
+
             <div className="absolute inset-0 flex flex-col justify-center px-12 text-background">
               <h2 className="text-4xl md:text-5xl font-bold mb-4 max-w-2xl">
-                {project.title}
+                {item.title}
               </h2>
               <p className="text-lg md:text-xl mb-6 max-w-xl text-background/90">
-                {project.description}
+                {item.shortDescription}
               </p>
               <Button className="w-fit">Подробнее</Button>
             </div>
@@ -77,6 +106,7 @@ const HeroCarousel = () => {
       >
         <ChevronLeft className="h-6 w-6" />
       </Button>
+
       <Button
         variant="ghost"
         size="icon"
@@ -88,11 +118,13 @@ const HeroCarousel = () => {
 
       {/* Indicators */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-        {mockProjects.map((_, index) => (
+        {items.map((_, index) => (
           <button
             key={index}
             className={`h-2 rounded-full transition-all ${
-              index === currentIndex ? "w-8 bg-background" : "w-2 bg-background/50"
+              index === currentIndex
+                ? "w-8 bg-background"
+                : "w-2 bg-background/50"
             }`}
             onClick={() => setCurrentIndex(index)}
           />

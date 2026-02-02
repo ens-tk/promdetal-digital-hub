@@ -1,7 +1,10 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { api } from "@/lib/api";
 import RichTextEditor from "@/components/admin/RichTextEditor";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -23,92 +26,154 @@ import { toast } from "sonner";
 
 interface EquipmentGroup {
   id: string;
-  name: string;
+  title: string;
   description: string;
-  image: string;
-  imageFile?: File | null;
+  coverImage?: { id: string } | null;
   equipmentCount: number;
 }
 
-const mockGroups: EquipmentGroup[] = [
-  { id: "1", name: "Насосное оборудование", description: "Насосы различных типов", image: "/placeholder.svg", equipmentCount: 8 },
-  { id: "2", name: "Компрессорное оборудование", description: "Компрессоры и системы сжатия", image: "/placeholder.svg", equipmentCount: 5 },
-  { id: "3", name: "Теплообменное оборудование", description: "Теплообменники и котлы", image: "/placeholder.svg", equipmentCount: 6 },
-];
-
 const AdminEquipmentGroups = () => {
-  const [groups, setGroups] = useState<EquipmentGroup[]>(mockGroups);
+  const [groups, setGroups] = useState<EquipmentGroup[]>([]);
+  const [images, setImages] = useState<Record<string, string>>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<EquipmentGroup | null>(null);
   const [formData, setFormData] = useState({
-    name: "",
+    title: "",
     description: "",
-    imageFile: null as File | null,
+    coverImageFile: null as File | null,
     imagePreview: "",
   });
 
-  const filteredGroups = groups.filter(item =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // ------------------------
+  // Load groups + images
+  // ------------------------
+  const loadGroups = async () => {
+    try {
+      const { data } = await api.get("/groups");
+      setGroups(data);
+
+      data.forEach(async (item) => {
+        if (item.coverImage && !images[item.id]) {
+          try {
+            const res = await api.get(`/Files/${item.coverImage.id}`, { responseType: "blob" });
+            const url = URL.createObjectURL(res.data);
+            setImages(prev => ({ ...prev, [item.id]: url }));
+          } catch {
+            // если не удалось загрузить картинку — игнорируем
+          }
+        }
+      });
+    } catch (err) {
+      toast.error((err as Error).message);
+    }
+  };
+
+  useEffect(() => {
+    loadGroups();
+  }, []);
+
+  // ------------------------
+  // Filtered groups
+  // ------------------------
+  const filteredGroups = groups.filter((item) =>
+    (item.title ?? "").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // ------------------------
+  // Create / Edit
+  // ------------------------
   const handleCreate = () => {
     setEditingItem(null);
-    setFormData({ name: "", description: "", imageFile: null, imagePreview: "" });
+    setFormData({ title: "", description: "", coverImageFile: null, imagePreview: "" });
     setIsDialogOpen(true);
   };
 
   const handleEdit = (item: EquipmentGroup) => {
     setEditingItem(item);
     setFormData({
-      name: item.name,
+      title: item.title,
       description: item.description,
-      imageFile: null,
-      imagePreview: item.image,
+      coverImageFile: null,
+      imagePreview: images[item.id] || "",
     });
     setIsDialogOpen(true);
   };
 
+  // ------------------------
+  // File select
+  // ------------------------
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const previewUrl = URL.createObjectURL(file);
-      setFormData({ ...formData, imageFile: file, imagePreview: previewUrl });
+      setFormData({ ...formData, coverImageFile: file, imagePreview: previewUrl });
     }
   };
 
-  const handleDelete = (id: string) => {
-    setGroups(groups.filter(item => item.id !== id));
-    toast.success("Группа удалена");
+  // ------------------------
+  // Delete
+  // ------------------------
+  const handleDelete = async (id: string) => {
+    if (!confirm("Вы уверены, что хотите удалить группу?")) return;
+    try {
+      await api.delete(`/groups/${id}`);
+      toast.success("Группа удалена");
+      await loadGroups();
+    } catch (err) {
+      toast.error((err as Error).message);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // ------------------------
+  // Upload file
+  // ------------------------
+  const uploadFile = async (file: File) => {
+    const data = new FormData();
+    data.append("file", file);
+    const res = await api.post("/Files", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data.id;
+  };
+
+  // ------------------------
+  // Submit form
+  // ------------------------
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const imageUrl = formData.imagePreview || "/placeholder.svg";
-    
-    if (editingItem) {
-      setGroups(groups.map(item => 
-        item.id === editingItem.id 
-          ? { ...item, name: formData.name, description: formData.description, image: imageUrl }
-          : item
-      ));
-      toast.success("Группа обновлена");
-    } else {
-      const newItem: EquipmentGroup = {
-        id: Date.now().toString(),
-        name: formData.name,
+
+    try {
+      let coverImageId = editingItem?.coverImage?.id || null;
+
+      if (formData.coverImageFile) {
+        coverImageId = await uploadFile(formData.coverImageFile);
+      }
+
+      const payload = {
+        title: formData.title,
         description: formData.description,
-        image: imageUrl,
-        equipmentCount: 0,
+        coverImage: coverImageId ? { id: coverImageId } : null,
       };
-      setGroups([newItem, ...groups]);
-      toast.success("Группа создана");
+
+      if (editingItem) {
+        await api.put(`/groups/${editingItem.id}`, payload);
+        toast.success("Группа обновлена");
+      } else {
+        await api.post("/groups", payload);
+        toast.success("Группа создана");
+      }
+
+      setIsDialogOpen(false);
+      await loadGroups();
+    } catch (err) {
+      toast.error((err as Error).message);
     }
-    
-    setIsDialogOpen(false);
   };
 
+  // ------------------------
+  // Render
+  // ------------------------
   return (
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -146,9 +211,13 @@ const AdminEquipmentGroups = () => {
               {filteredGroups.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell>
-                    <img src={item.image} alt="" className="w-16 h-12 object-cover rounded" />
+                    <img
+                      src={images[item.id] || "/placeholder.svg"}
+                      alt={item.title}
+                      className="w-16 h-12 object-cover rounded"
+                    />
                   </TableCell>
-                  <TableCell className="font-medium">{item.name}</TableCell>
+                  <TableCell className="font-medium">{item.title}</TableCell>
                   <TableCell className="max-w-xs truncate">{item.description}</TableCell>
                   <TableCell>{item.equipmentCount}</TableCell>
                   <TableCell className="text-right">
@@ -171,17 +240,15 @@ const AdminEquipmentGroups = () => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              {editingItem ? "Редактировать группу" : "Новая группа"}
-            </DialogTitle>
+            <DialogTitle>{editingItem ? "Редактировать группу" : "Новая группа"}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name">Название</Label>
               <Input
                 id="name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 required
               />
             </div>
@@ -189,9 +256,9 @@ const AdminEquipmentGroups = () => {
               <Label>Изображение</Label>
               {formData.imagePreview && (
                 <div className="mb-2">
-                  <img 
-                    src={formData.imagePreview} 
-                    alt="Preview" 
+                  <img
+                    src={formData.imagePreview}
+                    alt="Preview"
                     className="w-32 h-24 object-cover rounded border"
                   />
                 </div>
@@ -225,9 +292,7 @@ const AdminEquipmentGroups = () => {
               <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                 Отмена
               </Button>
-              <Button type="submit">
-                {editingItem ? "Сохранить" : "Создать"}
-              </Button>
+              <Button type="submit">{editingItem ? "Сохранить" : "Создать"}</Button>
             </div>
           </form>
         </DialogContent>

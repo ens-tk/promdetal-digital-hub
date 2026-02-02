@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
@@ -23,8 +25,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Search, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Search } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -35,46 +38,21 @@ interface ArticleItem {
   content: string;
   createdAt: string;
   coverImage?: { id: string } | null;
-  relatedArticles: number[]; // IDs of related articles
+  relatedArticles: number[];
 }
 
-// Mock data for demonstration
-const mockArticles: ArticleItem[] = [
-  {
-    id: 1,
-    title: "Как выбрать промышленный насос",
-    content: "<p>Подробное руководство по выбору насоса...</p>",
-    createdAt: "2024-01-15T10:00:00Z",
-    coverImage: null,
-    relatedArticles: [2, 3],
-  },
-  {
-    id: 2,
-    title: "Обслуживание компрессорного оборудования",
-    content: "<p>Регулярное техническое обслуживание...</p>",
-    createdAt: "2024-01-10T10:00:00Z",
-    coverImage: null,
-    relatedArticles: [],
-  },
-  {
-    id: 3,
-    title: "Энергоэффективность в промышленности",
-    content: "<p>Способы снижения энергопотребления...</p>",
-    createdAt: "2024-01-05T10:00:00Z",
-    coverImage: null,
-    relatedArticles: [1],
-  },
-];
-
 const AdminArticles = () => {
-  const [articles, setArticles] = useState<ArticleItem[]>(mockArticles);
+  const [articles, setArticles] = useState<ArticleItem[]>([]);
   const [images, setImages] = useState<Record<number, string>>({});
   const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<ArticleItem | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
   const [formData, setFormData] = useState({
     title: "",
@@ -83,26 +61,105 @@ const AdminArticles = () => {
     relatedArticles: [] as number[],
   });
 
-  const filteredArticles = articles.filter((item) =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // ------------------------
+  // Load articles + images
+  // ------------------------
+  const loadArticles = async () => {
+    setLoading(true);
+    try {
+      const res = await api.get("/articles");
+      const data: ArticleItem[] = Array.isArray(res.data)
+        ? res.data.map((a: any) => ({
+            id: a.id,
+            title: a.title,
+            content: a.content,
+            createdAt: a.createdAt,
+            coverImage: a.coverImage || null,
+            relatedArticles: (a.recommended || []).map((r: any) => r.id),
+          }))
+        : [];
 
-  // Get available articles for "related" selection (excluding current)
-  const availableForRelated = articles.filter(
-    (a) => a.id !== editingItem?.id
-  );
+      setArticles(data);
 
-  const handleEdit = (item: ArticleItem) => {
-    setIsCreating(false);
-    setEditingItem(item);
-    setFormData({
-      title: item.title,
-      content: item.content || "",
-      coverImage: null,
-      relatedArticles: [...item.relatedArticles],
-    });
-    setIsDialogOpen(true);
+      // загружаем изображения
+      data.forEach(async (item) => {
+        if (item.coverImage && !images[item.id]) {
+          try {
+            const imgRes = await api.get(`/Files/${item.coverImage.id}`, {
+              responseType: "blob",
+            });
+            const url = URL.createObjectURL(imgRes.data);
+            setImages((prev) => ({ ...prev, [item.id]: url }));
+          } catch {}
+        }
+      });
+    } catch {
+      toast.error("Ошибка загрузки статей");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    loadArticles();
+  }, []);
+
+  // ------------------------
+  // Upload file
+  // ------------------------
+  const uploadFile = async (file: File) => {
+    const data = new FormData();
+    data.append("file", file);
+    const res = await api.post("/Files", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data.id;
+  };
+
+  // ------------------------
+  // Create / Edit
+  // ------------------------
+  const handleEdit = async (id: number) => {
+  try {
+    setIsCreating(false);
+    setIsDialogOpen(true); // открываем диалог заранее, чтобы UI был отзывчивым
+    setEditingItem(null); // сбрасываем текущий item
+    setFormData({
+      title: "",
+      content: "",
+      coverImage: null,
+      relatedArticles: [],
+    });
+
+    console.log("Fetching article", id);
+    const res = await api.get(`/articles/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = res.data;
+    console.log("Fetched article data:", data);
+
+    setEditingItem({
+      id: data.id,
+      title: data.title,
+      content: data.content,
+      createdAt: data.createdAt,
+      coverImage: data.coverImage || null,
+      relatedArticles: (data.recommended || []).map((r: any) => r.id),
+    });
+
+    setFormData({
+      title: data.title,
+      content: data.content || "",
+      coverImage: null, // оставляем null, чтобы не перезаписывать текущую картинку
+      relatedArticles: (data.recommended || []).map((r: any) => r.id),
+    });
+  } catch (err) {
+    console.error("Error fetching article:", err);
+    toast.error("Не удалось загрузить статью для редактирования");
+    setIsDialogOpen(false);
+  }
+};
+
 
   const handleCreate = () => {
     setIsCreating(true);
@@ -118,67 +175,81 @@ const AdminArticles = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    console.log("handleSubmit -> formData:", formData);
     try {
+      let coverImage = formData.coverImage
+        ? { id: await uploadFile(formData.coverImage) }
+        : editingItem?.coverImage || null;
+
+      const payload = {
+        title: formData.title,
+        content: formData.content,
+        coverImage,
+        recommended: formData.relatedArticles.map((id) => ({ id })),
+      };
+
       if (isCreating) {
-        const newArticle: ArticleItem = {
-          id: Date.now(),
-          title: formData.title,
-          content: formData.content,
-          createdAt: new Date().toISOString(),
-          coverImage: null,
-          relatedArticles: formData.relatedArticles,
-        };
-        setArticles([newArticle, ...articles]);
+        await api.post("/articles", payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         toast.success("Статья создана");
       } else if (editingItem) {
-        setArticles(
-          articles.map((a) =>
-            a.id === editingItem.id
-              ? {
-                  ...a,
-                  title: formData.title,
-                  content: formData.content,
-                  relatedArticles: formData.relatedArticles,
-                }
-              : a
-          )
-        );
+        await api.put(`/articles/${editingItem.id}`, payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         toast.success("Статья обновлена");
       }
 
       setIsDialogOpen(false);
+      loadArticles();
     } catch (err) {
       console.error(err);
-      toast.error("Ошибка при сохранении");
+      toast.error("Ошибка при сохранении статьи");
     }
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm("Удалить статью?")) return;
-    setArticles((prev) => prev.filter((a) => a.id !== id));
-    toast.success("Статья удалена");
-  };
-
-  const toggleRelatedArticle = (articleId: number) => {
-    const isSelected = formData.relatedArticles.includes(articleId);
-    if (isSelected) {
-      setFormData({
-        ...formData,
-        relatedArticles: formData.relatedArticles.filter((id) => id !== articleId),
+    try {
+      await api.delete(`/articles/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-    } else {
-      if (formData.relatedArticles.length >= 3) {
-        toast.error("Можно выбрать максимум 3 статьи");
-        return;
-      }
-      setFormData({
-        ...formData,
-        relatedArticles: [...formData.relatedArticles, articleId],
-      });
+      setArticles((prev) => prev.filter((a) => a.id !== id));
+      toast.success("Статья удалена");
+    } catch {
+      toast.error("Ошибка при удалении статьи");
     }
   };
 
+  const toggleRelatedArticle = (id: number) => {
+    const exists = formData.relatedArticles.includes(id);
+    if (exists) {
+      setFormData((p) => ({
+        ...p,
+        relatedArticles: p.relatedArticles.filter((x) => x !== id),
+      }));
+    } else {
+      if (formData.relatedArticles.length >= 3) {
+        toast.error("Максимум 3 статьи");
+        return;
+      }
+      setFormData((p) => ({
+        ...p,
+        relatedArticles: [...p.relatedArticles, id],
+      }));
+    }
+  };
+
+  const filteredArticles = articles.filter((a) =>
+    a.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const availableForRelated = articles.filter(
+    (a) => a.id !== editingItem?.id
+  );
+
+  // ------------------------
+  // Render
+  // ------------------------
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -201,7 +272,6 @@ const AdminArticles = () => {
             />
           </div>
         </CardHeader>
-
         <CardContent>
           {loading ? (
             <p className="text-muted-foreground">Загрузка...</p>
@@ -216,7 +286,6 @@ const AdminArticles = () => {
                   <TableHead className="text-right">Действия</TableHead>
                 </TableRow>
               </TableHeader>
-
               <TableBody>
                 {filteredArticles.map((item) => (
                   <TableRow key={item.id}>
@@ -226,7 +295,7 @@ const AdminArticles = () => {
                         className="w-16 h-12 object-cover rounded"
                       />
                     </TableCell>
-                    <TableCell className="font-medium">{item.title}</TableCell>
+                    <TableCell>{item.title}</TableCell>
                     <TableCell>
                       {new Date(item.createdAt).toLocaleDateString("ru-RU")}
                     </TableCell>
@@ -237,13 +306,13 @@ const AdminArticles = () => {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleEdit(item)}
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </Button>
+<Button
+  variant="ghost"
+  size="icon"
+  onClick={() => handleEdit(item.id)} // передаем id, а не весь объект
+>
+  <Pencil className="w-4 h-4" />
+</Button>
                         <Button
                           variant="ghost"
                           size="icon"
@@ -255,25 +324,21 @@ const AdminArticles = () => {
                     </TableCell>
                   </TableRow>
                 ))}
-
-                {filteredArticles.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center text-muted-foreground">
-                      Ничего не найдено
-                    </TableCell>
-                  </TableRow>
-                )}
               </TableBody>
             </Table>
           )}
         </CardContent>
       </Card>
 
-      {/* Dialog для создания / редактирования */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh]">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle>{isCreating ? "Создать статью" : "Редактировать статью"}</DialogTitle>
+            <DialogTitle>
+              {isCreating ? "Создать статью" : "Редактировать статью"}
+            </DialogTitle>
+            <DialogDescription>
+              Редактирование содержимого статьи
+            </DialogDescription>
           </DialogHeader>
 
           <ScrollArea className="max-h-[70vh] pr-4">
@@ -282,29 +347,37 @@ const AdminArticles = () => {
                 <Label>Название</Label>
                 <Input
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   required
                 />
               </div>
 
               <div>
                 <Label>Содержание</Label>
-                <RichTextEditor
-                  value={formData.content}
-                  onChange={(content) => setFormData({ ...formData, content })}
-                />
+                {/* 🔹 Только рендерим редактор, если есть данные */}
+                {(isDialogOpen && (isCreating || editingItem)) && (
+                  <RichTextEditor
+                    value={formData.content}
+                    onChange={(content) => {
+                      console.log("RichTextEditor onChange:", content);
+                      setFormData({ ...formData, content });
+                    }}
+                  />
+                )}
               </div>
 
               <div>
                 <Label>Картинка</Label>
                 {!isCreating && editingItem?.coverImage && !formData.coverImage && (
                   <p className="text-sm text-muted-foreground mb-1">
-                    {`Текущая картинка: ${editingItem.coverImage.id}`}
+                    Текущая картинка: {editingItem.coverImage.id}
                   </p>
                 )}
                 {formData.coverImage && (
                   <p className="text-sm text-muted-foreground mb-1">
-                    {`Выбран файл: ${formData.coverImage.name}`}
+                    Выбран файл: {formData.coverImage.name}
                   </p>
                 )}
                 <Input
@@ -317,56 +390,44 @@ const AdminArticles = () => {
                 />
               </div>
 
-              {/* Related Articles Selection */}
-              <div className="space-y-3">
-                <Label>
-                  Может быть интересно{" "}
-                  <span className="text-muted-foreground font-normal">
-                    (выберите до 3 статей)
-                  </span>
-                </Label>
-                <div className="border rounded-lg p-3 space-y-2 max-h-48 overflow-y-auto">
-                  {availableForRelated.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">
-                      Нет доступных статей для выбора
-                    </p>
-                  ) : (
-                    availableForRelated.map((article) => {
-                      const isSelected = formData.relatedArticles.includes(article.id);
+              <div className="space-y-2">
+                <Label>Может быть интересно (до 3 статей)</Label>
+                <div className="border rounded p-3 space-y-2 max-h-48 overflow-y-auto">
+                  {articles
+                    .filter((a) => a.id !== editingItem?.id)
+                    .map((a) => {
+                      const selected = formData.relatedArticles.includes(a.id);
                       return (
                         <div
-                          key={article.id}
-                          className={`flex items-center gap-3 p-2 rounded-md cursor-pointer transition-colors ${
-                            isSelected
+                          key={a.id}
+                          className={`flex items-center gap-3 p-2 rounded ${
+                            selected
                               ? "bg-primary/10 border border-primary"
                               : "hover:bg-muted"
                           }`}
-                          onClick={() => toggleRelatedArticle(article.id)}
                         >
                           <Checkbox
-                            checked={isSelected}
-                            onCheckedChange={() => toggleRelatedArticle(article.id)}
+                            checked={selected}
+                            onCheckedChange={() => toggleRelatedArticle(a.id)}
                           />
-                          <span className="flex-1 text-sm">{article.title}</span>
-                          {isSelected && (
+                          <span className="flex-1 text-sm">{a.title}</span>
+                          {selected && (
                             <Badge variant="secondary">
-                              #{formData.relatedArticles.indexOf(article.id) + 1}
+                              #{formData.relatedArticles.indexOf(a.id) + 1}
                             </Badge>
                           )}
                         </div>
                       );
-                    })
-                  )}
+                    })}
                 </div>
-                {formData.relatedArticles.length > 0 && (
-                  <p className="text-sm text-muted-foreground">
-                    Выбрано: {formData.relatedArticles.length} из 3
-                  </p>
-                )}
               </div>
 
               <div className="flex justify-end gap-3 pt-4 border-t">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsDialogOpen(false)}
+                >
                   Отмена
                 </Button>
                 <Button type="submit">{isCreating ? "Создать" : "Сохранить"}</Button>
