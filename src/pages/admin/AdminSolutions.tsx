@@ -18,13 +18,30 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Plus, Pencil, Trash2, Search, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+// Mock equipment groups - in real app would come from API
+const mockEquipmentGroups = [
+  { id: "1", name: "Насосное оборудование" },
+  { id: "2", name: "Компрессорное оборудование" },
+  { id: "3", name: "Теплообменное оборудование" },
+  { id: "4", name: "Запорная арматура" },
+  { id: "5", name: "Электротехническое оборудование" },
+];
+
 interface Solution {
   id: string;
   name: string;
+  groupId: string;
   year: string;
   city: string;
   customer: string;
@@ -40,6 +57,7 @@ const mockSolutions: Solution[] = [
   {
     id: "1",
     name: "Модернизация насосной станции",
+    groupId: "1",
     year: "2023",
     city: "Москва",
     customer: "ООО Водоканал",
@@ -53,6 +71,7 @@ const mockSolutions: Solution[] = [
   {
     id: "2",
     name: "Автоматизация котельной",
+    groupId: "3",
     year: "2024",
     city: "Санкт-Петербург",
     customer: "АО Теплосеть",
@@ -72,6 +91,7 @@ const AdminSolutions = () => {
   const [editingItem, setEditingItem] = useState<Solution | null>(null);
   const [formData, setFormData] = useState({
     name: "",
+    groupId: "",
     year: "",
     city: "",
     customer: "",
@@ -95,6 +115,7 @@ const AdminSolutions = () => {
     setEditingItem(null);
     setFormData({
       name: "",
+      groupId: "",
       year: new Date().getFullYear().toString(),
       city: "",
       customer: "",
@@ -114,6 +135,7 @@ const AdminSolutions = () => {
     setEditingItem(item);
     setFormData({
       name: item.name,
+      groupId: item.groupId,
       year: item.year,
       city: item.city,
       customer: item.customer,
@@ -197,9 +219,9 @@ const AdminSolutions = () => {
               <TableRow>
                 <TableHead>Изображение</TableHead>
                 <TableHead>Название</TableHead>
+                <TableHead className="hidden md:table-cell">Группа</TableHead>
                 <TableHead className="hidden md:table-cell">Год</TableHead>
-                <TableHead className="hidden md:table-cell">Город</TableHead>
-                <TableHead className="hidden lg:table-cell">Заказчик</TableHead>
+                <TableHead className="hidden lg:table-cell">Город</TableHead>
                 <TableHead className="text-right">Действия</TableHead>
               </TableRow>
             </TableHeader>
@@ -215,13 +237,13 @@ const AdminSolutions = () => {
                   </TableCell>
                   <TableCell className="font-medium">{item.name}</TableCell>
                   <TableCell className="hidden md:table-cell">
-                    {item.year}
+                    {mockEquipmentGroups.find(g => g.id === item.groupId)?.name || "-"}
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    {item.city}
+                    {item.year}
                   </TableCell>
                   <TableCell className="hidden lg:table-cell">
-                    {item.customer}
+                    {item.city}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
@@ -257,6 +279,28 @@ const AdminSolutions = () => {
           </DialogHeader>
           <ScrollArea className="max-h-[70vh] pr-4">
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Group Selection */}
+              <div className="space-y-2">
+                <Label htmlFor="groupId">Группа оборудования</Label>
+                <Select
+                  value={formData.groupId}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, groupId: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Выберите группу" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {mockEquipmentGroups.map((group) => (
+                      <SelectItem key={group.id} value={group.id}>
+                        {group.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               {/* Name */}
               <div className="space-y-2">
                 <Label htmlFor="name">Название</Label>
