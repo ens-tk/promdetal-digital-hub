@@ -1,4 +1,7 @@
-import { useState } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,38 +24,68 @@ import { Plus, Pencil, Trash2, Search, Upload } from "lucide-react";
 import { toast } from "sonner";
 
 interface Partner {
-  id: string;
+  id: number;
   name: string;
-  image: string;
+  image?: { id: string } | null;
 }
 
-const mockPartners: Partner[] = [
-  { id: "1", name: "Grundfos", image: "/placeholder.svg" },
-  { id: "2", name: "Wilo", image: "/placeholder.svg" },
-  { id: "3", name: "KSB", image: "/placeholder.svg" },
-];
-
 const AdminPartners = () => {
-  const [partners, setPartners] = useState<Partner[]>(mockPartners);
+  const [partners, setPartners] = useState<Partner[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Partner | null>(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    image: "",
-  });
 
-  // File upload states
+  const [name, setName] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
 
-  const filteredPartners = partners.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
+  // ------------------------
+  // Load partners
+  // ------------------------
+  const loadPartners = async () => {
+    try {
+      const res = await api.get("/partners");
+      setPartners(Array.isArray(res.data) ? res.data : []);
+    } catch {
+      toast.error("Ошибка загрузки партнёров");
+    }
+  };
+
+  useEffect(() => {
+    loadPartners();
+  }, []);
+
+  const getImageUrl = (image?: { id: string } | null) =>
+    image
+      ? `http://localhost:8080/promdetal/api/Files/${image.id}`
+      : "/placeholder.svg";
+
+  // ------------------------
+  // Upload image
+  // ------------------------
+  const uploadImage = async (file: File) => {
+    const form = new FormData();
+    form.append("file", file);
+
+    const res = await api.post("/Files", form, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return res.data.id;
+  };
+
+  // ------------------------
+  // Create / Edit
+  // ------------------------
   const handleCreate = () => {
     setEditingItem(null);
-    setFormData({ name: "", image: "" });
+    setName("");
     setImageFile(null);
     setImagePreview("");
     setIsDialogOpen(true);
@@ -60,58 +93,67 @@ const AdminPartners = () => {
 
   const handleEdit = (item: Partner) => {
     setEditingItem(item);
-    setFormData({
-      name: item.name,
-      image: item.image,
-    });
+    setName(item.name);
     setImageFile(null);
-    setImagePreview(item.image);
+    setImagePreview(getImageUrl(item.image));
     setIsDialogOpen(true);
   };
 
-  const handleDelete = (id: string) => {
-    setPartners(partners.filter((item) => item.id !== id));
-    toast.success("Партнёр удалён");
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const imageUrl = imagePreview || formData.image;
+    try {
+      let image = editingItem?.image ?? null;
 
-    if (editingItem) {
-      setPartners(
-        partners.map((item) =>
-          item.id === editingItem.id
-            ? { ...item, name: formData.name, image: imageUrl }
-            : item
-        )
-      );
-      toast.success("Партнёр обновлён");
-    } else {
-      const newItem: Partner = {
-        id: Date.now().toString(),
-        name: formData.name,
-        image: imageUrl,
-      };
-      setPartners([newItem, ...partners]);
-      toast.success("Партнёр добавлен");
-    }
+      if (imageFile) {
+        image = { id: await uploadImage(imageFile) };
+      }
 
-    setIsDialogOpen(false);
-  };
+      const payload = { name, image };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
+      if (editingItem) {
+        await api.put(`/partners/${editingItem.id}`, payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        toast.success("Партнёр обновлён");
+      } else {
+        await api.post("/partners", payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        toast.success("Партнёр добавлен");
+      }
+
+      setIsDialogOpen(false);
+      loadPartners();
+    } catch (err) {
+      console.error(err);
+      toast.error("Ошибка сохранения партнёра");
     }
   };
 
+  const handleDelete = async (id: number) => {
+    if (!confirm("Удалить партнёра?")) return;
+    try {
+      await api.delete(`/partners/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setPartners((p) => p.filter((x) => x.id !== id));
+      toast.success("Партнёр удалён");
+    } catch {
+      toast.error("Ошибка удаления");
+    }
+  };
+
+  const filteredPartners = partners.filter((p) =>
+    p.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // ------------------------
+  // Render
+  // ------------------------
   return (
     <div>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+      <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Партнёры</h1>
         <Button onClick={handleCreate}>
           <Plus className="w-4 h-4 mr-2" />
@@ -122,9 +164,9 @@ const AdminPartners = () => {
       <Card>
         <CardHeader>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" />
             <Input
-              placeholder="Поиск по названию..."
+              placeholder="Поиск..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -145,29 +187,26 @@ const AdminPartners = () => {
                 <TableRow key={item.id}>
                   <TableCell>
                     <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-20 h-12 object-contain rounded bg-muted p-1"
+                      src={getImageUrl(item.image)}
+                      className="w-20 h-12 object-contain bg-muted p-1 rounded"
                     />
                   </TableCell>
-                  <TableCell className="font-medium">{item.name}</TableCell>
+                  <TableCell>{item.name}</TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleEdit(item)}
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDelete(item.id)}
-                      >
-                        <Trash2 className="w-4 h-4 text-destructive" />
-                      </Button>
-                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleEdit(item)}
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      <Trash2 className="w-4 h-4 text-destructive" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -176,7 +215,9 @@ const AdminPartners = () => {
         </CardContent>
       </Card>
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+
+
+<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>
@@ -186,14 +227,7 @@ const AdminPartners = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name">Название</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                required
-              />
+ <Input value={name} onChange={(e) => setName(e.target.value)} />
             </div>
 
             <div className="space-y-2">
@@ -214,7 +248,12 @@ const AdminPartners = () => {
                   type="file"
                   accept="image/*"
                   className="hidden"
-                  onChange={handleImageChange}
+                  onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setImageFile(file);
+                    setImagePreview(URL.createObjectURL(file));
+                  }}}
                 />
                 {imageFile && (
                   <span className="text-sm text-muted-foreground">
@@ -249,5 +288,5 @@ const AdminPartners = () => {
     </div>
   );
 };
-
+    
 export default AdminPartners;

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { api } from "@/lib/api"; // твой axios
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,7 +33,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   EquipmentIconPicker,
   getIconById,
-  availableIcons,
 } from "@/components/admin/EquipmentIconPicker";
 import {
   ImageHotspotEditor,
@@ -48,112 +48,143 @@ interface Advantage {
 
 interface Equipment {
   id: string;
-  name: string;
+  title: string;
   group: string;
   groupId: string;
   shortDescription: string;
-  longDescription: string;
-  image: string;
-  hotspotImage: string;
-  showOnHomepage: boolean;
+  fullDescription: string;
+  mainImageId?: string | null;
+  hotspotImageId?: string | null;
+  showOnMain: boolean;
   advantages: Advantage[];
   hotspots: Hotspot[];
   videoUrl: string;
   searchKeywords: string;
 }
 
-const mockGroups = [
-  { id: "1", name: "Насосное оборудование" },
-  { id: "2", name: "Компрессорное оборудование" },
-  { id: "3", name: "Теплообменное оборудование" },
-];
 
-const mockEquipment: Equipment[] = [
-  {
-    id: "1",
-    name: "Центробежный насос ЦН-100",
-    group: "Насосное оборудование",
-    groupId: "1",
-    shortDescription: "Высокопроизводительный насос",
-    longDescription:
-      "Центробежный насос ЦН-100 предназначен для перекачивания чистых жидкостей. Отличается высокой надёжностью и эффективностью.",
-    image: "/placeholder.svg",
-    hotspotImage: "/placeholder.svg",
-    showOnHomepage: true,
-    advantages: [
-      { id: "1", iconId: "zap", text: "Энергоэффективность" },
-      { id: "2", iconId: "shield", text: "Надёжность" },
-    ],
-    hotspots: [],
-    videoUrl: "",
-    searchKeywords: "помпа, водяной насос, перекачка",
-  },
-  {
-    id: "2",
-    name: "Винтовой компрессор ВК-50",
-    group: "Компрессорное оборудование",
-    groupId: "2",
-    shortDescription: "Компактный компрессор",
-    longDescription:
-      "Винтовой компрессор ВК-50 идеально подходит для промышленного применения. Низкий уровень шума и вибраций.",
-    image: "/placeholder.svg",
-    hotspotImage: "/placeholder.svg",
-    showOnHomepage: false,
-    advantages: [],
-    hotspots: [],
-    videoUrl: "",
-    searchKeywords: "",
-  },
-];
+
+interface EquipmentGroup {
+  id: string;
+  title: string;
+}
 
 const AdminEquipment = () => {
-  const [equipment, setEquipment] = useState<Equipment[]>(mockEquipment);
+  const [equipment, setEquipment] = useState<Equipment[]>([]);
+  const [groups, setGroups] = useState<EquipmentGroup[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<Equipment | null>(null);
+  const [editingItem, setEditingItem] = useState<Equipment | null>(null);const [images, setImages] = useState<Record<string, string>>({});
+const [hotspotImages, setHotspotImages] = useState<Record<string, string>>({});
+
   const [formData, setFormData] = useState<Omit<Equipment, "id" | "group">>({
-    name: "",
+    title: "",
     groupId: "",
     shortDescription: "",
-    longDescription: "",
-    image: "",
-    hotspotImage: "",
-    showOnHomepage: false,
+    fullDescription: "",
+    mainImageId: null,
+    hotspotImageId: null,
+    showOnMain: false,
     advantages: [],
     hotspots: [],
     videoUrl: "",
     searchKeywords: "",
   });
-  
-  // File upload states
-  const [imageFile, setImageFile] = useState<File | null>(null);
+const [imageFile, setImageFile] = useState<File | null>(null);
+const [hotspotImageFile, setHotspotImageFile] = useState<File | null>(null);
+
   const [imagePreview, setImagePreview] = useState<string>("");
-  const [hotspotImageFile, setHotspotImageFile] = useState<File | null>(null);
   const [hotspotImagePreview, setHotspotImagePreview] = useState<string>("");
 
-  // Icon picker state
   const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
-  const [editingAdvantageIndex, setEditingAdvantageIndex] = useState<
-    number | null
-  >(null);
-
-  // Hotspot editor state
+  const [editingAdvantageIndex, setEditingAdvantageIndex] = useState<number | null>(null);
   const [isHotspotEditorOpen, setIsHotspotEditorOpen] = useState(false);
 
-  const filteredEquipment = equipment.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Загрузка данных с бэка
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const [eqRes, grRes] = await Promise.all([
+        api.get<Equipment[]>("/equipment"),
+        api.get<EquipmentGroup[]>("/groups"),
+      ]);
+
+      const equipmentData = eqRes.data;
+      setEquipment(equipmentData);
+      setGroups(grRes.data);
+
+      // Загружаем все картинки
+      const imagePromises = equipmentData.map(async (item) => {
+        if (!item.mainImageId) return [item.id, undefined] as const;
+        const res = await api.get(`/Files/${item.mainImageId}`, { responseType: "blob" });
+        const url = URL.createObjectURL(res.data);
+        return [item.id, url] as const;
+      });
+
+      const results = await Promise.all(imagePromises);
+      const imagesMap: Record<string, string> = {};
+      results.forEach(([id, url]) => {
+        if (url) imagesMap[id] = url;
+      });
+      setImages(imagesMap);
+
+      // Аналогично для hotspotImages
+      const hotspotPromises = equipmentData.map(async (item) => {
+        if (!item.hotspotImageId) return [item.id, undefined] as const;
+        const res = await api.get(`/Files/${item.hotspotImageId}`, { responseType: "blob" });
+        const url = URL.createObjectURL(res.data);
+        return [item.id, url] as const;
+      });
+
+      const hotspotResults = await Promise.all(hotspotPromises);
+      const hotspotMap: Record<string, string> = {};
+      hotspotResults.forEach(([id, url]) => {
+        if (url) hotspotMap[id] = url;
+      });
+      setHotspotImages(hotspotMap);
+
+    } catch (error) {
+      console.error(error);
+      toast.error("Не удалось загрузить данные с сервера");
+    }
+  };
+
+  fetchData();
+}, []);
+
+
+
+const filteredEquipment = equipment.filter((item) =>
+  (item.title ?? "").toLowerCase().includes(searchQuery.toLowerCase())
+);
+
+const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+const uploadFile = async (file: File) => {
+  const token = localStorage.getItem("token");
+  const data = new FormData();
+  data.append("file", file);
+  const res = await api.post("/Files", data, {
+    headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
+  });
+  return res.data.id;
+};
+
+
+
+const getFileUrl = (id?: string) =>
+  id ? `http://localhost:8080/promdetal/api/Files/${id}` : "/placeholder.svg";
 
   const handleCreate = () => {
     setEditingItem(null);
     setFormData({
-      name: "",
+      title: "",
       groupId: "",
       shortDescription: "",
-      longDescription: "",
-      image: "",
-      hotspotImage: "",
-      showOnHomepage: false,
+      fullDescription: "",
+      mainImageId: null,
+      hotspotImageId: null,
+      showOnMain: false,
       advantages: [],
       hotspots: [],
       videoUrl: "",
@@ -167,60 +198,85 @@ const AdminEquipment = () => {
   };
 
   const handleEdit = (item: Equipment) => {
-    setEditingItem(item);
-    setFormData({
-      name: item.name,
-      groupId: item.groupId,
-      shortDescription: item.shortDescription,
-      longDescription: item.longDescription,
-      image: item.image,
-      hotspotImage: item.hotspotImage,
-      showOnHomepage: item.showOnHomepage,
-      advantages: [...item.advantages],
-      hotspots: [...item.hotspots],
-      videoUrl: item.videoUrl,
-      searchKeywords: item.searchKeywords,
-    });
-    setImageFile(null);
-    setImagePreview(item.image);
-    setHotspotImageFile(null);
-    setHotspotImagePreview(item.hotspotImage);
-    setIsDialogOpen(true);
+setEditingItem(item);
+setFormData({
+  title: item.title,
+  groupId: item.groupId,
+  shortDescription: item.shortDescription,
+  fullDescription: item.fullDescription,
+  mainImageId: item.mainImageId ?? null,
+  hotspotImageId: item.hotspotImageId ?? null,
+  showOnMain: item.showOnMain,
+  advantages: [...item.advantages],
+  hotspots: [...item.hotspots],
+  videoUrl: item.videoUrl,
+  searchKeywords: item.searchKeywords,
+});
+setImageFile(null);
+setImagePreview(getFileUrl(item.mainImageId));           // <-- URL для preview
+setHotspotImageFile(null);
+setHotspotImagePreview(getFileUrl(item.hotspotImageId));
+setIsDialogOpen(true);
+};
+
+  const handleDelete = async (id: string) => {
+    try {
+      await api.delete(`/equipment/${id}`);
+      setEquipment(equipment.filter((item) => item.id !== id));
+      toast.success("Оборудование удалено");
+    } catch (error) {
+      console.error(error);
+      toast.error("Ошибка при удалении оборудования");
+    }
   };
 
-  const handleDelete = (id: string) => {
-    setEquipment(equipment.filter((item) => item.id !== id));
-    toast.success("Оборудование удалено");
-  };
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  try {
+const mainImageId = imageFile
+  ? await uploadFile(imageFile)      // возвращает UUID
+  : editingItem?.mainImageId || null;
 
-    const group = mockGroups.find((g) => g.id === formData.groupId);
+const hotspotImageId = hotspotImageFile
+  ? await uploadFile(hotspotImageFile)
+  : editingItem?.hotspotImageId || null;
+
+const dto = {
+  title: formData.title,
+  groupId: formData.groupId,
+  shortDescription: formData.shortDescription,
+  fullDescription: formData.fullDescription,
+  showOnMain: formData.showOnMain,
+  videoUrl: formData.videoUrl,
+  searchKeywords: formData.searchKeywords,
+  advantages: formData.advantages,
+  hotspots: formData.hotspots,
+  mainImageId,        // <-- теперь UUID
+  hotspotImageId,     // <-- теперь UUID
+};
 
     if (editingItem) {
-      setEquipment(
-        equipment.map((item) =>
-          item.id === editingItem.id
-            ? { ...item, ...formData, group: group?.name || "" }
-            : item
-        )
-      );
+      await api.put(`/equipment/${editingItem.id}`, dto, { headers: { Authorization: `Bearer ${token}` } });
       toast.success("Оборудование обновлено");
     } else {
-      const newItem: Equipment = {
-        id: Date.now().toString(),
-        ...formData,
-        group: group?.name || "",
-      };
-      setEquipment([newItem, ...equipment]);
+      await api.post("/equipment", dto, { headers: { Authorization: `Bearer ${token}` } });
       toast.success("Оборудование создано");
     }
 
     setIsDialogOpen(false);
-  };
+    // Перезагружаем с сервера, чтобы обновились превью и данные
+    const eqRes = await api.get<Equipment[]>("/equipment");
+    setEquipment(eqRes.data);
+  } catch (err) {
+    console.error(err);
+    toast.error("Ошибка при сохранении оборудования");
+  }
+};
 
-  // Advantages management
+
+
+  // Преимущества
   const handleAddAdvantage = () => {
     setFormData({
       ...formData,
@@ -300,19 +356,23 @@ const AdminEquipment = () => {
             <TableBody>
               {filteredEquipment.map((item) => (
                 <TableRow key={item.id}>
+<TableCell>
+<img
+  src={item.mainImageId ? getFileUrl(item.mainImageId) : "/placeholder.svg"}
+  className="w-16 h-12 object-cover rounded"
+  alt={item.title}
+/>
+</TableCell>
+
+                  <TableCell className="font-medium">{item.title}</TableCell>
                   <TableCell>
-                    <img
-                      src={item.image}
-                      alt=""
-                      className="w-16 h-12 object-cover rounded"
-                    />
-                  </TableCell>
-                  <TableCell className="font-medium">{item.name}</TableCell>
-                  <TableCell>
-                    <Badge variant="secondary">{item.group}</Badge>
-                  </TableCell>
+  <Badge variant="secondary">
+    {groups.find((g) => g.id === item.groupId)?.title || "—"}
+  </Badge>
+</TableCell>
+
                   <TableCell className="hidden md:table-cell">
-                    {item.showOnHomepage ? (
+                    {item.showOnMain ? (
                       <Badge variant="default">Да</Badge>
                     ) : (
                       <Badge variant="outline">Нет</Badge>
@@ -360,9 +420,9 @@ const AdminEquipment = () => {
                   <Label htmlFor="name">Название</Label>
                   <Input
                     id="name"
-                    value={formData.name}
+                    value={formData.title}
                     onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
+                      setFormData({ ...formData, title: e.target.value })
                     }
                     required
                   />
@@ -378,13 +438,14 @@ const AdminEquipment = () => {
                     <SelectTrigger>
                       <SelectValue placeholder="Выберите группу" />
                     </SelectTrigger>
-                    <SelectContent>
-                      {mockGroups.map((group) => (
-                        <SelectItem key={group.id} value={group.id}>
-                          {group.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
+<SelectContent>
+  {groups.map((group) => (
+    <SelectItem key={group.id} value={group.id}>
+      {group.title}
+    </SelectItem>
+  ))}
+</SelectContent>
+
                   </Select>
                 </div>
               </div>
@@ -404,12 +465,12 @@ const AdminEquipment = () => {
 
               {/* Long description */}
               <div className="space-y-2">
-                <Label htmlFor="longDescription">Длинное описание</Label>
+                <Label htmlFor="fullDescription">Длинное описание</Label>
                 <Textarea
-                  id="longDescription"
-                  value={formData.longDescription}
+                  id="fullDescription"
+                  value={formData.fullDescription}
                   onChange={(e) =>
-                    setFormData({ ...formData, longDescription: e.target.value })
+                    setFormData({ ...formData, fullDescription: e.target.value })
                   }
                   rows={4}
                   placeholder="Подробное описание оборудования"
@@ -446,11 +507,11 @@ const AdminEquipment = () => {
                   )}
                 </div>
                 {imagePreview && (
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-full max-w-xs h-32 object-cover rounded border mt-2"
-                  />
+<img
+  src={imagePreview || getFileUrl(editingItem.mainImageId)}
+  alt="Preview"
+  className="w-full max-w-xs h-32 object-cover rounded border mt-2"
+/>
                 )}
               </div>
 
@@ -490,27 +551,27 @@ const AdminEquipment = () => {
                   </Button>
                 </div>
                 {hotspotImagePreview && (
-                  <img
-                    src={hotspotImagePreview}
-                    alt="Hotspot Preview"
-                    className="w-full max-w-xs h-32 object-cover rounded border mt-2"
-                  />
+<img
+  src={hotspotImagePreview || getFileUrl(editingItem.hotspotImageId)}
+  alt="Hotspot Preview"
+  className="w-full max-w-xs h-32 object-cover rounded border mt-2"
+/>
                 )}
               </div>
 
               {/* Show on homepage */}
               <div className="flex items-center space-x-2">
                 <Checkbox
-                  id="showOnHomepage"
-                  checked={formData.showOnHomepage}
+                  id="showOnMain"
+                  checked={formData.showOnMain}
                   onCheckedChange={(checked) =>
                     setFormData({
                       ...formData,
-                      showOnHomepage: checked === true,
+                      showOnMain: checked === true,
                     })
                   }
                 />
-                <Label htmlFor="showOnHomepage" className="cursor-pointer">
+                <Label htmlFor="showOnMain" className="cursor-pointer">
                   Показывать на главной странице
                 </Label>
               </div>

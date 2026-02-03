@@ -14,7 +14,7 @@ const mockSolution = {
   name: "Автоматизированная линия сборки",
   description: "Высокопроизводительная автоматизированная линия для сборки промышленных компонентов с интегрированной системой контроля качества.",
   image: "/placeholder.svg",
-  youtubeVideoId: "dQw4w9WgXcQ", // YouTube video ID
+  rutubeVideoId: "b204ec02aa76ed13479c589bd6938876",
   advantages: [
     { image: "/placeholder.svg", text: "Повышение производительности до 300%" },
     { image: "/placeholder.svg", text: "Снижение брака на 95%" },
@@ -148,20 +148,22 @@ const SolutionDetail = () => {
         </div>
 
         {/* YouTube Video Section */}
-        {mockSolution.youtubeVideoId && (
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Видео</h2>
-            <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
-              <iframe
-                src={`https://www.youtube.com/embed/${mockSolution.youtubeVideoId}`}
-                title="YouTube video"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="absolute inset-0 w-full h-full"
-              />
-            </div>
-          </div>
-        )}
+{mockSolution.rutubeVideoId && (
+  <div className="mb-12">
+    <h2 className="text-2xl font-bold mb-6">Видео</h2>
+
+    <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
+      <iframe
+        src={`https://rutube.ru/play/embed/${mockSolution.rutubeVideoId}`}
+        title="Rutube video"
+        frameBorder="0"
+        allow="clipboard-write; autoplay"
+        allowFullScreen
+        className="absolute inset-0 w-full h-full"
+      />
+    </div>
+  </div>
+)}
 
         {/* Completed Projects */}
         <div>

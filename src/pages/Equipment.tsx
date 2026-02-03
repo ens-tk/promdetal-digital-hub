@@ -111,7 +111,7 @@ const EquipmentPage = () => {
                 {equipmentByGroup[group.id]?.map((eq) => (
                   <Link
                     key={eq.id}
-                    to={`/equipment/${eq.slug}`}
+                    to={`/equipment/${eq.id}`}
                     className="block text-sm text-muted-foreground hover:text-primary transition-colors py-0.5"
                   >
                     {eq.title}
