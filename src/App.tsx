@@ -29,6 +29,7 @@ import AdminEquipmentGroups from "./pages/admin/AdminEquipmentGroups";
 import AdminEquipment from "./pages/admin/AdminEquipment";
 import AdminSolutions from "./pages/admin/AdminSolutions";
 import AdminArticles from "./pages/admin/AdminArticles";
+import AdminPartners from "./pages/admin/AdminPartners";
 
 const queryClient = new QueryClient();
 
@@ -59,13 +60,14 @@ const App = () => (
               {/* Admin routes */}
               <Route element={<PrivateRoute />}>
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                              <Route path="/admin" element={<AdminLayout />}>
+              <Route path="/admin" element={<AdminLayout />}>
                 <Route path="dashboard" element={<AdminDashboard />} />
                 <Route path="news" element={<AdminNews />} />
                 <Route path="equipment-groups" element={<AdminEquipmentGroups />} />
                 <Route path="equipment" element={<AdminEquipment />} />
                 <Route path="solutions" element={<AdminSolutions />} />
                 <Route path="articles" element={<AdminArticles />} />
+                <Route path="partners" element={<AdminPartners />} />
               </Route>
               </Route>
               <Route path="/login" element={<AdminLogin />} />

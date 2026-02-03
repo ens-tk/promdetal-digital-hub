@@ -58,6 +58,8 @@ interface Equipment {
   showOnHomepage: boolean;
   advantages: Advantage[];
   hotspots: Hotspot[];
+  videoUrl: string;
+  searchKeywords: string;
 }
 
 const mockGroups = [
@@ -83,6 +85,8 @@ const mockEquipment: Equipment[] = [
       { id: "2", iconId: "shield", text: "Надёжность" },
     ],
     hotspots: [],
+    videoUrl: "",
+    searchKeywords: "помпа, водяной насос, перекачка",
   },
   {
     id: "2",
@@ -97,6 +101,8 @@ const mockEquipment: Equipment[] = [
     showOnHomepage: false,
     advantages: [],
     hotspots: [],
+    videoUrl: "",
+    searchKeywords: "",
   },
 ];
 
@@ -115,6 +121,8 @@ const AdminEquipment = () => {
     showOnHomepage: false,
     advantages: [],
     hotspots: [],
+    videoUrl: "",
+    searchKeywords: "",
   });
   
   // File upload states
@@ -148,6 +156,8 @@ const AdminEquipment = () => {
       showOnHomepage: false,
       advantages: [],
       hotspots: [],
+      videoUrl: "",
+      searchKeywords: "",
     });
     setImageFile(null);
     setImagePreview("");
@@ -168,6 +178,8 @@ const AdminEquipment = () => {
       showOnHomepage: item.showOnHomepage,
       advantages: [...item.advantages],
       hotspots: [...item.hotspots],
+      videoUrl: item.videoUrl,
+      searchKeywords: item.searchKeywords,
     });
     setImageFile(null);
     setImagePreview(item.image);
@@ -501,6 +513,35 @@ const AdminEquipment = () => {
                 <Label htmlFor="showOnHomepage" className="cursor-pointer">
                   Показывать на главной странице
                 </Label>
+              </div>
+
+              {/* Video URL */}
+              <div className="space-y-2">
+                <Label htmlFor="videoUrl">Видео (Rutube URL)</Label>
+                <Input
+                  id="videoUrl"
+                  value={formData.videoUrl}
+                  onChange={(e) =>
+                    setFormData({ ...formData, videoUrl: e.target.value })
+                  }
+                  placeholder="https://rutube.ru/video/..."
+                />
+              </div>
+
+              {/* Search Keywords */}
+              <div className="space-y-2">
+                <Label htmlFor="searchKeywords">Ключевые слова для поиска</Label>
+                <Input
+                  id="searchKeywords"
+                  value={formData.searchKeywords}
+                  onChange={(e) =>
+                    setFormData({ ...formData, searchKeywords: e.target.value })
+                  }
+                  placeholder="Синонимы через запятую: помпа, водяной насос"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Альтернативные названия для улучшения поиска
+                </p>
               </div>
 
               {/* Advantages */}

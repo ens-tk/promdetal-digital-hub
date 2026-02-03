@@ -9,7 +9,8 @@ import {
   LogOut,
   Menu,
   X,
-  FileText
+  FileText,
+  Handshake
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -21,6 +22,7 @@ const menuItems = [
   { title: "Группы оборудования", href: "/admin/equipment-groups", icon: Layers },
   { title: "Оборудование", href: "/admin/equipment", icon: Wrench },
   { title: "Решения", href: "/admin/solutions", icon: Lightbulb },
+  { title: "Партнёры", href: "/admin/partners", icon: Handshake },
 ];
 
 const AdminLayout = () => {
