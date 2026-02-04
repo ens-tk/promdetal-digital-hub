@@ -1,34 +1,66 @@
 import { useParams, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { api } from "@/lib/api";
 import { ArrowLeft, Calendar, MapPin, Building2, Wrench, Cog } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-const mockProject = {
-  id: "1",
-  name: "Модернизация насосной станции",
-  date: "2024",
-  image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1200&h=600&fit=crop",
-  client: "ПАО «Газпром нефть»",
-  location: "г. Омск, Россия",
-  equipmentType: "Центробежные насосы",
-  services: ["Проектирование", "Поставка", "Монтаж", "Пусконаладка"],
-  stages: [
-    {
-      title: "Проблема",
-      description: "Существующее насосное оборудование морально и физически устарело, что приводило к частым поломкам и простоям производства. Энергопотребление превышало нормативы на 40%, а производительность снизилась на 25% от проектной мощности.",
-    },
-    {
-      title: "Решение",
-      description: "Разработан комплексный проект модернизации с заменой насосного оборудования на современные энергоэффективные центробежные насосы. Внедрена система автоматического управления и мониторинга параметров работы.",
-    },
-    {
-      title: "Итог",
-      description: "Снижение энергопотребления на 35%, увеличение производительности до проектных показателей. Срок окупаемости проекта составил 18 месяцев. Гарантийное обслуживание на 3 года.",
-    },
-  ],
-};
+interface ProjectStage {
+  title: string;
+  description: string;
+}
+
+interface Project {
+  id: string;
+  name: string;
+  date: string;
+  imageId?: string;
+  client: string;
+  location: string;
+  equipmentType: string;
+  services: string[];
+  stages: ProjectStage[];
+}
 
 const ProjectDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
+  const [project, setProject] = useState<Project | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const getFileUrl = (id?: string) => {
+    if (!id) return "/placeholder.svg";
+    return `${api.defaults.baseURL}/Files/${id}`;
+  };
+
+  useEffect(() => {
+    if (!id) return;
+
+    api.get(`/cases/${id}`)
+      .then(res => {
+        const data = res.data;
+        // Преобразуем данные под наш интерфейс
+        const projectData: Project = {
+          id: data.id,
+          name: data.title,
+          date: data.year ? String(data.year) : "-",
+          imageId: data.imageId,
+          client: data.customer || "-",
+          location: data.city || "-",
+          equipmentType: data.equipmentType || "-",
+          services: data.services ? data.services.split(",") : [],
+          stages: [
+            { title: "Проблема", description: data.problem || "-" },
+            { title: "Решение", description: data.solution || "-" },
+            { title: "Итог", description: data.result || "-" },
+          ],
+        };
+        setProject(projectData);
+      })
+      .catch(err => console.error(err))
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  if (loading) return <div className="p-8 text-center">Загрузка...</div>;
+  if (!project) return <div className="p-8 text-center">Проект не найден</div>;
 
   return (
     <div className="min-h-screen">
@@ -48,24 +80,24 @@ const ProjectDetail = () => {
       {/* Hero Image */}
       <div className="relative h-[400px] overflow-hidden">
         <img
-          src={mockProject.image}
-          alt={mockProject.name}
+          src={getFileUrl(project.imageId)}
+          alt={project.name}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8">
           <div className="container">
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              {mockProject.name}
+              {project.name}
             </h1>
             <div className="flex flex-wrap gap-4 text-white/90">
               <div className="flex items-center gap-2">
                 <Calendar className="w-5 h-5" />
-                <span>{mockProject.date}</span>
+                <span>{project.date}</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="w-5 h-5" />
-                <span>{mockProject.location}</span>
+                <span>{project.location}</span>
               </div>
             </div>
           </div>
@@ -83,7 +115,7 @@ const ProjectDetail = () => {
               </div>
               <span className="text-sm text-muted-foreground">Заказчик</span>
             </div>
-            <p className="font-semibold text-lg">{mockProject.client}</p>
+            <p className="font-semibold text-lg">{project.client}</p>
           </div>
 
           {/* Equipment Type */}
@@ -94,7 +126,7 @@ const ProjectDetail = () => {
               </div>
               <span className="text-sm text-muted-foreground">Тип оборудования</span>
             </div>
-            <p className="font-semibold text-lg">{mockProject.equipmentType}</p>
+            <p className="font-semibold text-lg">{project.equipmentType}</p>
           </div>
 
           {/* Services */}
@@ -106,7 +138,7 @@ const ProjectDetail = () => {
               <span className="text-sm text-muted-foreground">Услуги</span>
             </div>
             <div className="flex flex-wrap gap-2">
-              {mockProject.services.map((service, index) => (
+              {project.services.map((service, index) => (
                 <Badge key={index} variant="secondary">
                   {service}
                 </Badge>
@@ -119,7 +151,7 @@ const ProjectDetail = () => {
         <div>
           <h2 className="text-2xl font-bold mb-8 text-center">Этапы реализации</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {mockProject.stages.map((stage, index) => (
+            {project.stages.map((stage, index) => (
               <div 
                 key={index} 
                 className="relative bg-card rounded-lg p-6 border"

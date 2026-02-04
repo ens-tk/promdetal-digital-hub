@@ -430,23 +430,23 @@ const dto = {
                 <div className="space-y-2">
                   <Label htmlFor="group">Группа</Label>
                   <Select
-                    value={formData.groupId}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, groupId: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Выберите группу" />
-                    </SelectTrigger>
-<SelectContent>
-  {groups.map((group) => (
-    <SelectItem key={group.id} value={group.id}>
-      {group.title}
-    </SelectItem>
-  ))}
-</SelectContent>
+  value={formData.groupId} // должно быть string
+  onValueChange={(value) =>
+    setFormData({ ...formData, groupId: value })
+  }
+>
+  <SelectTrigger>
+    <SelectValue placeholder="Выберите группу" />
+  </SelectTrigger>
+  <SelectContent>
+    {groups.map((group) => (
+      <SelectItem key={group.id} value={group.id.toString()}>
+        {group.title}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
 
-                  </Select>
                 </div>
               </div>
 

@@ -16,6 +16,7 @@ interface Group {
   description: string;
   coverImage?: {
     path: string;
+    id: string;
   };
 }
 
@@ -90,18 +91,20 @@ const EquipmentPage = () => {
               <Link to={`/equipment/group/${group.id}`} className="block">
                 <div className="relative h-52 rounded-lg overflow-hidden mb-4">
                   <img
-                    src={group.coverImage?.path || "/placeholder.svg"}
-                    alt={group.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+  src={group.coverImage?.id ? `${api.defaults.baseURL}/Files/${group.coverImage.id}` : "/placeholder.svg"}
+  alt={group.title}
+  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+/>
+
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-5">
                     <h3 className="text-white font-bold text-xl mb-1">
                       {group.title}
                     </h3>
-                    <p className="text-white/80 text-sm">
-                      {group.description}
-                    </p>
+                    <div 
+  className="text-white/80 text-sm" 
+  dangerouslySetInnerHTML={{ __html: group.description || "" }}
+/>
                   </div>
                 </div>
               </Link>

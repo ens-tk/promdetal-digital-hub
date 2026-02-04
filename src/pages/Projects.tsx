@@ -12,15 +12,14 @@ interface CaseImage {
 
 interface ProjectCase {
   id: number;
-  equipmentId: number;
-  equipmentTitle: string;
+  title: string; // equipmentTitle
   customer: string;
-  deliveryDate: string;
-  equipmentType: string;
+  year?: number;
+  equipmentType?: string;
   purpose1?: string;
   purpose2?: string;
   purpose3?: string;
-  image?: CaseImage;
+  imageId?: string;
 }
 
 /* ===== COMPONENT ===== */
@@ -68,19 +67,18 @@ const Projects = () => {
             <Link key={project.id} to={`/projects/${project.id}`}>
               <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
                 <img
-                  src={project.image?.path || "/placeholder.svg"}
-                  alt={project.equipmentTitle}
-                  className="w-full h-48 object-cover"
-                />
+  src={project.imageId ? `${api.defaults.baseURL}/Files/${project.imageId}` : "/placeholder.svg"}
+  alt={project.title}
+  className="w-full h-48 object-cover"
+/>
+
+
 
                 <div className="p-6">
-                  <Badge className="mb-2">
-                    {project.equipmentType}
-                  </Badge>
+                  <Badge className="mb-2">{project.equipmentType || "-"}</Badge>
 
-                  <h3 className="font-semibold text-xl mb-2">
-                    {project.equipmentTitle}
-                  </h3>
+                  
+<h3 className="font-semibold text-xl mb-2">{project.title}</h3>
 
                   <p className="text-sm text-muted-foreground mb-4">
                     {[project.purpose1, project.purpose2, project.purpose3]
@@ -97,11 +95,8 @@ const Projects = () => {
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Calendar className="h-4 w-4" />
                       <span>
-                        {new Date(project.deliveryDate).toLocaleDateString(
-                          "ru-RU",
-                          { year: "numeric", month: "long" }
-                        )}
-                      </span>
+  {project.year ? project.year : "-"}
+</span>
                     </div>
                   </div>
                 </div>

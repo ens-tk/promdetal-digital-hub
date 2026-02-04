@@ -5,12 +5,31 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Mail, Phone, MapPin, Send, Download, Building2, FileText } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { api } from "@/lib/api";
 
 const Contacts = () => {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form submitted");
-  };
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  const form = e.currentTarget;
+  const name = (form.elements.namedItem("name") as HTMLInputElement).value;
+  const contact = (form.elements.namedItem("contact") as HTMLInputElement).value;
+  const message = (form.elements.namedItem("message") as HTMLTextAreaElement).value;
+
+  try {
+    await api.post("/contact", {
+      name,
+      contact,
+      message,
+    });
+
+    alert("Сообщение успешно отправлено!");
+    form.reset();
+  } catch (error: any) {
+    console.error("Ошибка при отправке:", error);
+    alert("Не удалось отправить сообщение. Попробуйте позже.");
+  }
+};
 
   const handleDownloadRequisites = () => {
     const link = document.createElement("a");

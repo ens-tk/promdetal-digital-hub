@@ -7,7 +7,7 @@ interface EquipmentItem {
   id: number;
   title: string;
   shortDescription: string;
-  imageIds: string[];
+  mainImageId: string;
 }
 
 const HeroCarousel = () => {
@@ -26,7 +26,7 @@ const HeroCarousel = () => {
 
       // Загружаем первую картинку
       data.forEach(async (item) => {
-        const imageId = item.imageIds?.[0];
+        const imageId = item.mainImageId;
         if (imageId && !images[item.id]) {
           const imgRes = await api.get(`/Files/${imageId}`, {
             responseType: "blob",

@@ -1,10 +1,12 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 
 interface Partner {
   id: number;
   name: string;
-  logo: string;
+  image?: { id: string; path?: string } | string; // объект или строка
 }
 
 const PartnersSection = () => {
@@ -15,6 +17,13 @@ const PartnersSection = () => {
       .then(res => setPartners(res.data))
       .catch(err => console.error(err));
   }, []);
+
+  const getLogoUrl = (image?: { id: string; path?: string } | string) => {
+    if (!image) return "/placeholder.svg"; // заглушка
+    if (typeof image === "string") return image.startsWith("http") ? image : `/uploads/${image}`;
+    if ("id" in image && image.id) return `${api.defaults.baseURL}/Files/${image.id}`;
+    return "/placeholder.svg";
+  };
 
   return (
     <section className="py-16 bg-muted">
@@ -29,7 +38,7 @@ const PartnersSection = () => {
               className="flex items-center justify-center p-4 bg-background rounded-lg hover:shadow-md transition-shadow"
             >
               <img
-                src={partner.logo}
+                src={getLogoUrl(partner.image)}
                 alt={partner.name}
                 className="h-12 object-contain grayscale hover:grayscale-0 transition-all"
               />

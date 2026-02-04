@@ -218,7 +218,9 @@ const AdminEquipmentGroups = () => {
                     />
                   </TableCell>
                   <TableCell className="font-medium">{item.title}</TableCell>
-                  <TableCell className="max-w-xs truncate">{item.description}</TableCell>
+                  <TableCell className="max-w-xs">
+  <div className="text-sm text-muted-foreground" dangerouslySetInnerHTML={{ __html: item.description }} />
+</TableCell>
                   <TableCell>{item.equipmentCount}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
