@@ -1,7 +1,6 @@
 import { Link, useLocation, Outlet } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
-  LayoutDashboard, 
   Newspaper, 
   Layers, 
   Wrench, 
@@ -16,7 +15,6 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 const menuItems = [
-  { title: "Дашборд", href: "/admin/dashboard", icon: LayoutDashboard },
   { title: "Новости", href: "/admin/news", icon: Newspaper },
   { title: "Статьи", href: "/admin/articles", icon: FileText },
   { title: "Группы оборудования", href: "/admin/equipment-groups", icon: Layers },

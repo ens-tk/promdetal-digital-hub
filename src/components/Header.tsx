@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, Search, MapPin, Clock, Phone, Mail, Globe, ChevronDown } from "lucide-react";
+import { Menu, X, Search, MapPin, Clock, Phone, Mail, Globe, ChevronDown, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { auth } from "@/lib/auth";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -49,6 +50,17 @@ const Header = () => {
             >
               <Search className="h-4 w-4" />
             </Button>
+            {auth.isAuthenticated() && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 gap-1 text-primary-foreground hover:bg-primary-foreground/10"
+                onClick={() => navigate("/admin/news")}
+              >
+                <Settings className="h-4 w-4" />
+                <span className="hidden sm:inline">Админка</span>
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="sm"
