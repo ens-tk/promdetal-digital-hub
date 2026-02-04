@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, Search, MapPin, Clock, Phone, Mail, Globe, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -15,8 +14,8 @@ import ensLogo from "@/assets/ens-logo.jpg";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [language, setLanguage] = useState<"ru" | "en">("ru");
+  const navigate = useNavigate();
 
   return (
     <header className="sticky top-0 z-50 w-full">
@@ -46,7 +45,7 @@ const Header = () => {
               variant="ghost"
               size="sm"
               className="h-7 px-2 text-primary-foreground hover:bg-primary-foreground/10"
-              onClick={() => setSearchOpen(!searchOpen)}
+              onClick={() => navigate("/search")}
             >
               <Search className="h-4 w-4" />
             </Button>
@@ -270,19 +269,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Search Bar */}
-      {searchOpen && (
-        <div className="border-t bg-background p-4">
-          <div className="container">
-            <Input
-              type="search"
-              placeholder="Поиск оборудования..."
-              className="max-w-md"
-              autoFocus
-            />
-          </div>
-        </div>
-      )}
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
