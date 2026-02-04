@@ -24,7 +24,7 @@ import ServiceDetail from "./pages/ServiceDetail";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminLayout from "./components/admin/AdminLayout";
-import AdminDashboard from "./pages/admin/AdminDashboard";
+
 import AdminNews from "./pages/admin/AdminNews";
 import AdminEquipmentGroups from "./pages/admin/AdminEquipmentGroups";
 import AdminEquipment from "./pages/admin/AdminEquipment";
@@ -61,9 +61,7 @@ const App = () => (
               <Route path="/services/:serviceId" element={<ServiceDetail />} />
               {/* Admin routes */}
               <Route element={<PrivateRoute />}>
-                <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/admin" element={<AdminLayout />}>
-                <Route path="dashboard" element={<AdminDashboard />} />
                 <Route path="news" element={<AdminNews />} />
                 <Route path="equipment-groups" element={<AdminEquipmentGroups />} />
                 <Route path="equipment" element={<AdminEquipment />} />
