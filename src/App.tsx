@@ -8,6 +8,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Index from "./pages/Index";
 import Equipment from "./pages/Equipment";
+import Search from "./pages/Search";
 import EquipmentDetail from "./pages/EquipmentDetail";
 import SolutionDetail from "./pages/SolutionDetail";
 import ProjectDetail from "./pages/ProjectDetail";
@@ -44,6 +45,7 @@ const App = () => (
           <main className="flex-1">
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/search" element={<Search />} />
               <Route path="/equipment" element={<Equipment />} />
               <Route path="/equipment/:id" element={<EquipmentDetail />} />
               <Route path="/solution/:id" element={<SolutionDetail />} />
