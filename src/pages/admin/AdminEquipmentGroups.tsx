@@ -261,7 +261,7 @@ const AdminEquipmentGroups = () => {
                   <img
                     src={formData.imagePreview}
                     alt="Preview"
-                    className="w-32 h-24 object-cover rounded border"
+                    className="max-w-xs max-h-64 object-contain rounded border"
                   />
                 </div>
               )}

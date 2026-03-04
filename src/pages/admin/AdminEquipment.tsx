@@ -513,7 +513,7 @@ const dto = {
                     <img
                       src={imagePreview || getFileUrl(editingItem?.mainImageId)}
                       alt="Preview"
-                      className="max-w-xs h-32 object-cover rounded border"
+                      className="max-w-xs max-h-64 object-contain rounded border"
                       style={{
                         width: mainImageWidth ? `${mainImageWidth}px` : undefined,
                         height: mainImageHeight ? `${mainImageHeight}px` : undefined,
@@ -581,7 +581,7 @@ const dto = {
                     <img
                       src={hotspotImagePreview || getFileUrl(editingItem?.hotspotImageId)}
                       alt="Hotspot Preview"
-                      className="max-w-xs h-32 object-cover rounded border"
+                      className="max-w-xs max-h-64 object-contain rounded border"
                       style={{
                         width: hotspotImageWidth ? `${hotspotImageWidth}px` : undefined,
                         height: hotspotImageHeight ? `${hotspotImageHeight}px` : undefined,
