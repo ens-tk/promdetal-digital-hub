@@ -300,7 +300,7 @@ const uploadFile = async (file: File) => {
                 <Upload /> Выбрать изображение
               </Button>
               <input type="file" id="solutionImage" className="hidden" onChange={handleImageChange} />
-              {imagePreview && <img src={imagePreview} className="w-32 h-32 object-cover mt-2" />}
+              {imagePreview && <img src={imagePreview} className="max-w-xs max-h-64 object-contain mt-2 rounded border" />}
 
               {/* Problem, Solution, Result */}
               <Textarea
