@@ -20,7 +20,7 @@ const NewsDetail = () => {
 
   const getImageUrl = (coverImage?: { id: string; path: string; name: string } | null) => {
     if (!coverImage) return "/placeholder.svg";
-    return `http://localhost:8080/promdetal/api/Files/${coverImage.id}`;
+    return `http://62.76.142.36:8080/promdetal/api/Files/${coverImage.id}`;
   };
 
   useEffect(() => {

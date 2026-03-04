@@ -177,7 +177,7 @@ const uploadFile = async (file: File) => {
 
 
 const getFileUrl = (id?: string) =>
-  id ? `http://localhost:8080/promdetal/api/Files/${id}` : "/placeholder.svg";
+  id ? `http://62.76.142.36:8080/promdetal/api/Files/${id}` : "/placeholder.svg";
 
   const handleCreate = () => {
     setEditingItem(null);

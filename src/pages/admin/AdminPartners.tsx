@@ -60,7 +60,7 @@ const AdminPartners = () => {
 
   const getImageUrl = (image?: { id: string } | null) =>
     image
-      ? `http://localhost:8080/promdetal/api/Files/${image.id}`
+      ? `http://62.76.142.36:8080/promdetal/api/Files/${image.id}`
       : "/placeholder.svg";
 
   // ------------------------
