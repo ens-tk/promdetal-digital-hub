@@ -1,4 +1,4 @@
-import { Link, useLocation, Outlet } from "react-router-dom";
+import { Link, useLocation, useNavigate, Outlet } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
   Newspaper, 
@@ -25,11 +25,12 @@ const menuItems = [
 
 const AdminLayout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLogout = () => {
-    // TODO: Replace with actual logout logic
-    window.location.href = "/admin";
+    localStorage.removeItem("token");
+    navigate("/");
   };
 
   return (
