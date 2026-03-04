@@ -84,7 +84,7 @@ const Articles = () => {
                 <img
                   src={getImageUrl(article.coverImage)}
                   alt={article.title}
-                  className="w-full h-48 object-cover"
+                  className="w-full h-48 object-contain"
                 />
                 <div className="p-6">
                   {article.createdAt && (

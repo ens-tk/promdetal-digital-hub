@@ -79,7 +79,7 @@ const HeroCarousel = () => {
             <img
               src={images[item.id] || "/placeholder.svg"}
               alt={item.title}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain"
             />
 
             <div className="absolute inset-0 bg-gradient-to-r from-industrial-dark/80 to-transparent" />

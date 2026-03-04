@@ -101,7 +101,7 @@ const NewsDetail = () => {
               <img
                 src={getImageUrl(news.coverImage)}
                 alt={news.title}
-                className="w-full h-64 md:h-80 object-cover rounded-lg mb-6"
+                className="w-full h-64 md:h-80 object-contain rounded-lg mb-6"
               />
             )}
             <div 
@@ -123,7 +123,7 @@ const NewsDetail = () => {
                       <img
                         src={getImageUrl(item.coverImage)}
                         alt={item.title}
-                        className="w-full h-32 object-cover"
+                        className="w-full h-32 object-contain"
                       />
                     )}
                     <div className="p-4">

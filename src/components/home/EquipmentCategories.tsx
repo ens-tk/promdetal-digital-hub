@@ -142,7 +142,7 @@ const EquipmentCategories = () => {
                     <img
                       src={getImageUrl(item.mainImageId)}
                       alt={item.title}
-                      className="w-full h-full object-cover group-hover/card:scale-105 transition-transform"
+                      className="w-full h-full object-contain group-hover/card:scale-105 transition-transform"
                     />
                   </div>
                   <span className="text-sm font-medium group-hover/card:text-primary">

@@ -98,7 +98,7 @@ const ServiceDetail = () => {
         <img
           src={service.image}
           alt={service.title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8">

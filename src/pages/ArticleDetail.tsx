@@ -98,7 +98,7 @@ const ArticleDetail = () => {
             <img
               src={getImageUrl(article.coverImage)}
               alt={article.title}
-              className="w-full h-64 md:h-80 object-cover rounded-lg mb-6"
+              className="w-full h-64 md:h-80 object-contain rounded-lg mb-6"
             />
             <div
               className="prose prose-lg max-w-none text-foreground"
@@ -120,7 +120,7 @@ const ArticleDetail = () => {
                         <img
                           src={getImageUrl(item.coverImage)}
                           alt={item.title}
-                          className="w-full h-32 object-cover"
+                          className="w-full h-32 object-contain"
                         />
                         <div className="p-4">
                           <h4 className="font-medium text-base line-clamp-2 mb-2">
