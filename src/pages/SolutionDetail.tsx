@@ -61,7 +61,7 @@ const SolutionDetail = () => {
             <img
               src={mockSolution.image}
               alt={mockSolution.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </div>
           <div className="flex flex-col justify-center">
@@ -84,7 +84,7 @@ const SolutionDetail = () => {
                   <img
                     src={advantage.image}
                     alt={advantage.text}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                 </div>
                 <p className="text-sm font-medium">{advantage.text}</p>
@@ -112,7 +112,7 @@ const SolutionDetail = () => {
             <img
               src={mockSolution.coverImage.path}
               alt="Интерактивная схема"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
             {mockSolution.coverImage.hotspots.map((hotspot) => (
               <button
@@ -176,7 +176,7 @@ const SolutionDetail = () => {
                     <img
                       src={project.image}
                       alt={`Проект ${project.year}`}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                     />
                   </div>
                   <div className="p-4">

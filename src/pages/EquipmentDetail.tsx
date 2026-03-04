@@ -109,7 +109,7 @@ const EquipmentDetail = () => {
               <img
                 src={mainImageUrl}
                 alt={equipment.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             )}
           </div>
@@ -167,7 +167,7 @@ const EquipmentDetail = () => {
               <img
                 src={hotspotImageUrl}
                 alt="Интерактивная схема"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
               {equipment.hotspots.map((hotspot) => (
                 <button
@@ -233,7 +233,7 @@ const EquipmentDetail = () => {
                       <img
                         src={project.image}
                         alt={`Проект ${project.year}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                       />
                     </div>
                     <div className="p-4">

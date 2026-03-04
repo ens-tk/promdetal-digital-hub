@@ -59,7 +59,7 @@ const News = () => {
                     <img
                       src={`http://localhost:8080/promdetal/api/Files/${item.coverImage.id}`}
                       alt={item.title}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-48 object-contain"
                     />
                   ) : (
                     <div className="w-full h-48 bg-muted flex items-center justify-center text-sm text-muted-foreground">
