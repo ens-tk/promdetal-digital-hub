@@ -69,7 +69,7 @@ const Projects = () => {
                 <img
   src={project.imageId ? `${api.defaults.baseURL}/Files/${project.imageId}` : "/placeholder.svg"}
   alt={project.title}
-  className="w-full h-48 object-cover"
+  className="w-full h-48 object-contain"
 />
 
 

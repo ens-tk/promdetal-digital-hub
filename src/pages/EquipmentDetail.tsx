@@ -126,7 +126,7 @@ const EquipmentDetail = () => {
               <img
                 src={mainImageUrl}
                 alt={equipment.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             )}
           </div>
@@ -184,7 +184,7 @@ const EquipmentDetail = () => {
               <img
                 src={hotspotImageUrl}
                 alt="Интерактивная схема"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
               {equipment.hotspots.map((hotspot) => (
                 <button
@@ -248,10 +248,12 @@ const EquipmentDetail = () => {
                   <Card className="overflow-hidden hover:shadow-lg transition-shadow">
                     <div className="aspect-[4/3]">
                       <img
-  src={getFileUrl(project.imageId ?? undefined)}
-  alt={`Проект ${project.year}`}
-  className="w-full h-full object-cover"
-/>
+
+                        src={getFileUrl(project.imageId ?? undefined)}
+                        alt={`Проект ${project.year}`}
+                        className="w-full h-full object-contain"
+                      />
+
                     </div>
                     <div className="p-4">
                       <p className="font-bold text-lg">{project.year}</p>
