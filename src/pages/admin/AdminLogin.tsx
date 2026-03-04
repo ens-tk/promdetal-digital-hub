@@ -29,7 +29,7 @@ const AdminLogin = () => {
     localStorage.setItem("token", response.data.token);
 
     toast.success("Успешный вход в систему");
-    navigate("/admin/dashboard");
+    navigate("/admin/news");
   } catch (error: any) {
     toast.error("Неверный логин или пароль");
   } finally {

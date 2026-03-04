@@ -9,7 +9,17 @@ interface Advantage {
   iconId?: string;
   text: string;
 }
-
+interface Case {
+  id: number;
+  title: string;
+  solution?: string | null;
+  imageId?: string | null;
+  year?: number | null;
+  city?: string | null;
+  customer?: string | null;
+  services?: string | null;
+  problem?: string | null;
+}
 interface Hotspot {
   id: number;
   x: number;
@@ -26,6 +36,7 @@ interface Project {
 
 interface Equipment {
   id: string;
+  groupId: number;
   title: string;
   shortDescription: string;
   fullDescription: string;
@@ -55,7 +66,7 @@ const EquipmentDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(null);
-
+  const [cases, setCases] = useState<Case[]>([]);
   const [mainImageUrl, setMainImageUrl] = useState<string | null>(null);
   const [hotspotImageUrl, setHotspotImageUrl] = useState<string | null>(null);
 
@@ -66,7 +77,11 @@ const EquipmentDetail = () => {
       try {
         const { data } = await api.get<Equipment>(`/equipment/${id}`);
         setEquipment(data);
-
+        if (data.id) {
+          const groupCasesRes = await api.get<Case[]>(`/groups/${data.groupId}/cases`);
+          setCases(groupCasesRes.data);
+          console.log("Полученные кейсы:", groupCasesRes.data);
+        }
         // Подгружаем основное изображение
         if (data.mainImageId) {
           const res = await api.get(`/Files/${data.mainImageId}`, {
@@ -82,6 +97,8 @@ const EquipmentDetail = () => {
           });
           setHotspotImageUrl(URL.createObjectURL(res.data));
         }
+
+        
       } catch (e) {
         console.error(e);
         setError("Не удалось загрузить оборудование");
@@ -222,24 +239,24 @@ const EquipmentDetail = () => {
         )}
 
         {/* PROJECTS */}
-        {equipment.completedProjects && (
+        {cases.length > 0 && (
           <div>
             <h2 className="text-2xl font-bold mb-6">Реализованные проекты</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {equipment.completedProjects.map((project) => (
+              {cases.map((project) => (
                 <Link key={project.id} to={`/projects/${project.id}`}>
                   <Card className="overflow-hidden hover:shadow-lg transition-shadow">
                     <div className="aspect-[4/3]">
                       <img
-                        src={project.image}
-                        alt={`Проект ${project.year}`}
-                        className="w-full h-full object-cover"
-                      />
+  src={getFileUrl(project.imageId ?? undefined)}
+  alt={`Проект ${project.year}`}
+  className="w-full h-full object-cover"
+/>
                     </div>
                     <div className="p-4">
                       <p className="font-bold text-lg">{project.year}</p>
                       <p className="text-sm text-muted-foreground">
-                        {project.location}
+                        {project.city}
                       </p>
                     </div>
                   </Card>
