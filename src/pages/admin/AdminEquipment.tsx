@@ -3,7 +3,7 @@ import { api } from "@/lib/api"; // твой axios
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -90,6 +90,10 @@ const [hotspotImages, setHotspotImages] = useState<Record<string, string>>({});
     videoUrl: "",
     searchKeywords: "",
   });
+  const [mainImageWidth, setMainImageWidth] = useState<string>("");
+  const [mainImageHeight, setMainImageHeight] = useState<string>("");
+  const [hotspotImageWidth, setHotspotImageWidth] = useState<string>("");
+  const [hotspotImageHeight, setHotspotImageHeight] = useState<string>("");
 const [imageFile, setImageFile] = useState<File | null>(null);
 const [hotspotImageFile, setHotspotImageFile] = useState<File | null>(null);
 
@@ -465,14 +469,12 @@ const dto = {
 
               {/* Long description */}
               <div className="space-y-2">
-                <Label htmlFor="fullDescription">Длинное описание</Label>
-                <Textarea
-                  id="fullDescription"
+                <Label>Длинное описание</Label>
+                <RichTextEditor
                   value={formData.fullDescription}
-                  onChange={(e) =>
-                    setFormData({ ...formData, fullDescription: e.target.value })
+                  onChange={(value) =>
+                    setFormData({ ...formData, fullDescription: value })
                   }
-                  rows={4}
                   placeholder="Подробное описание оборудования"
                 />
               </div>
@@ -507,11 +509,35 @@ const dto = {
                   )}
                 </div>
                 {imagePreview && (
-<img
-  src={imagePreview || getFileUrl(editingItem.mainImageId)}
-  alt="Preview"
-  className="w-full max-w-xs h-32 object-cover rounded border mt-2"
-/>
+                  <div className="mt-2 space-y-2">
+                    <img
+                      src={imagePreview || getFileUrl(editingItem?.mainImageId)}
+                      alt="Preview"
+                      className="max-w-xs h-32 object-cover rounded border"
+                      style={{
+                        width: mainImageWidth ? `${mainImageWidth}px` : undefined,
+                        height: mainImageHeight ? `${mainImageHeight}px` : undefined,
+                      }}
+                    />
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="number"
+                        placeholder="Ширина (px)"
+                        value={mainImageWidth}
+                        onChange={(e) => setMainImageWidth(e.target.value)}
+                        className="w-28"
+                      />
+                      <span className="text-muted-foreground">×</span>
+                      <Input
+                        type="number"
+                        placeholder="Высота (px)"
+                        value={mainImageHeight}
+                        onChange={(e) => setMainImageHeight(e.target.value)}
+                        className="w-28"
+                      />
+                      <span className="text-xs text-muted-foreground">px</span>
+                    </div>
+                  </div>
                 )}
               </div>
 
@@ -551,11 +577,35 @@ const dto = {
                   </Button>
                 </div>
                 {hotspotImagePreview && (
-<img
-  src={hotspotImagePreview || getFileUrl(editingItem.hotspotImageId)}
-  alt="Hotspot Preview"
-  className="w-full max-w-xs h-32 object-cover rounded border mt-2"
-/>
+                  <div className="mt-2 space-y-2">
+                    <img
+                      src={hotspotImagePreview || getFileUrl(editingItem?.hotspotImageId)}
+                      alt="Hotspot Preview"
+                      className="max-w-xs h-32 object-cover rounded border"
+                      style={{
+                        width: hotspotImageWidth ? `${hotspotImageWidth}px` : undefined,
+                        height: hotspotImageHeight ? `${hotspotImageHeight}px` : undefined,
+                      }}
+                    />
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="number"
+                        placeholder="Ширина (px)"
+                        value={hotspotImageWidth}
+                        onChange={(e) => setHotspotImageWidth(e.target.value)}
+                        className="w-28"
+                      />
+                      <span className="text-muted-foreground">×</span>
+                      <Input
+                        type="number"
+                        placeholder="Высота (px)"
+                        value={hotspotImageHeight}
+                        onChange={(e) => setHotspotImageHeight(e.target.value)}
+                        className="w-28"
+                      />
+                      <span className="text-xs text-muted-foreground">px</span>
+                    </div>
+                  </div>
                 )}
               </div>
 
