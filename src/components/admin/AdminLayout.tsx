@@ -29,10 +29,9 @@ const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/";
-  };
-
+  localStorage.removeItem("token");
+  navigate("/login", { replace: true });
+};
   return (
     <div className="min-h-screen bg-muted/30">
       {/* Mobile header */}
