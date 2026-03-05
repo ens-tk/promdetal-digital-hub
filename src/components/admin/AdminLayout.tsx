@@ -30,7 +30,7 @@ const AdminLayout = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/");
+    window.location.href = "/";
   };
 
   return (
