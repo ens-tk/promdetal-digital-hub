@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 
 const PrivateRoute = () => {
   if (!auth.isAuthenticated()) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return <Outlet />;
