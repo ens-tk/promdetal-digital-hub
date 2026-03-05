@@ -30,7 +30,7 @@ const AdminLayout = () => {
 
   const handleLogout = () => {
   localStorage.removeItem("token");
-  navigate("/login", { replace: true });
+  navigate("/", { replace: true });
 };
   return (
     <div className="min-h-screen bg-muted/30">
