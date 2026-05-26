@@ -57,7 +57,7 @@ const getRutubeEmbedUrl = (url?: string) => {
 };
 
 const getFileUrl = (id?: string) =>
-  id ? `http://62.76.142.36:8080/promdetal/api/Files/${id}` : "/placeholder.svg";
+  id ? `http://157.22.174.170:8080/promdetal/api/Files/${id}` : "/placeholder.svg";
 
 /* ===================== COMPONENT ===================== */
 const EquipmentDetail = () => {
