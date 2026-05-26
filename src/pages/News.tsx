@@ -57,7 +57,7 @@ const News = () => {
                 <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
                   {item.coverImage ? (
                     <img
-                      src={`http://localhost:8080/promdetal/api/Files/${item.coverImage.id}`}
+                      src={`http://62.76.142.36:8080/promdetal/api/Files/${item.coverImage.id}`}
                       alt={item.title}
                       className="w-full h-48 object-contain"
                     />

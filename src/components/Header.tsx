@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, Search, MapPin, Clock, Phone, Mail, Globe, ChevronDown, Settings } from "lucide-react";
+import { Menu, X, Search, MapPin, Clock, Phone, Mail, Globe, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
 import {
@@ -11,7 +11,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import ensLogo from "@/assets/ens-logo.jpg";
+import ensLogo from "@/assets/ens-logo-B60Hzgrb.png";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -75,10 +75,18 @@ const Header = () => {
       </div>
 
       {/* Main Header */}
-      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2">
-            <img src={ensLogo} alt="ENS Group" className="h-14 w-auto" />
+      <div className="border-b bg-background">
+        <div className="container flex h-25 items-center justify-between overflow-visible">
+          <Link to="/" className="flex items-center gap-5 group">
+            <img src={ensLogo} alt="ENS Group" className="h-[130px] w-auto -mt-7 -mb-2" />
+            <div className="flex flex-col leading-tight">
+              <span className="text-3xl font-bold text-primary tracking-tight group-hover:opacity-80 transition-opacity">
+                ENS Group
+              </span>
+              <span className="text-base text-muted-foreground font-medium tracking-wide uppercase">
+                Промышленное оборудование
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
