@@ -89,9 +89,13 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 <div>
                   <h3 className="font-semibold mb-2">Телефон</h3>
                   <p className="text-muted-foreground">
-                    +7 (3822) 12-34-56
+                    +7 (382 2) 21- 79- 88
                     <br />
-                    Пн-Пт: 8:00 - 17:00
+                    +7 (382 2) 25- 52- 85
+                    <br />
+                    +7 (382 2) 25- 55- 66
+                    <br />
+                    Пн-Пт: 9:00 - 18:00
                   </p>
                 </div>
               </div>
@@ -103,9 +107,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 <div>
                   <h3 className="font-semibold mb-2">Email</h3>
                   <p className="text-muted-foreground">
-                    info@promdetal.ru
-                    <br />
-                    sales@promdetal.ru
+                    info@enspg.ru
                   </p>
                 </div>
               </div>
@@ -120,12 +122,12 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                     <div>
                       <span className="font-medium text-foreground">Юридический:</span>
                       <br />
-                      423800, РТ, г. Набережные Челны, Мензелинский тракт, д.14, Блок А
+                      Россия, 634027, г. Томск, ул. Смирнова, 7/11 строение 6 помещение 1
                     </div>
                     <div>
                       <span className="font-medium text-foreground">Почтовый:</span>
                       <br />
-                      423823, РТ, г. Набережные Челны, а/я 52
+                      Россия, 634027, г. Томск, ул. Смирнова, а/я 3235
                     </div>
                   </div>
                 </div>
@@ -155,15 +157,15 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 <div className="space-y-3">
                   <div>
                     <span className="text-muted-foreground text-sm">Полное наименование:</span>
-                    <p className="font-medium">Общество с ограниченной ответственностью «Завод РУ-ДРАЙВ»</p>
+                    <p className="font-medium">Общество с Ограниченной Ответственностью "Промдеталь"</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground text-sm">Сокращенное наименование:</span>
-                    <p className="font-medium">ООО «Завод РУ-ДРАЙВ»</p>
+                    <p className="font-medium">ООО «Промдеталь»</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground text-sm">Директор:</span>
-                    <p className="font-medium">Идиятулин Равиль Фаильевич, действует на основании Устава</p>
+                    <p className="font-medium">Энс Дмитрий Владимирович, действует на основании Устава</p>
                   </div>
                 </div>
               </div>
@@ -174,11 +176,11 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 <div className="space-y-3">
                   <div>
                     <span className="text-muted-foreground text-sm">Юридический:</span>
-                    <p className="font-medium">423800, РТ, г. Набережные Челны, Мензелинский тракт, д.14, Блок А</p>
+                    <p className="font-medium">Россия, 634027, г. Томск, ул. Смирнова, 7/11 строение 6 помещение 1</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground text-sm">Почтовый:</span>
-                    <p className="font-medium">423823, РТ, г. Набережные Челны, а/я 52</p>
+                    <p className="font-medium">Россия, 634027, г. Томск, ул. Смирнова, а/я 3235</p>
                   </div>
                 </div>
               </div>
@@ -189,15 +191,19 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <span className="text-muted-foreground text-sm">ОГРН:</span>
-                    <p className="font-medium">1221600055258</p>
+                    <p className="font-medium">1057002688852</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground text-sm">ИНН:</span>
-                    <p className="font-medium">1650415251</p>
+                    <p className="font-medium">7017133548</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground text-sm">КПП:</span>
-                    <p className="font-medium">165001001</p>
+                    <p className="font-medium">701701001</p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground text-sm">ЭДО:</span>
+                    <p className="font-medium">2BE461bfa9e480011e3ba45005056917125</p>
                   </div>
                 </div>
               </div>
@@ -208,67 +214,21 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <span className="text-muted-foreground text-sm">ОКПО:</span>
-                    <p className="font-medium">93879769</p>
+                    <p className="font-medium">79195171</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground text-sm">ОКВЭД:</span>
-                    <p className="font-medium">27.12</p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground text-sm">ОКАТО:</span>
-                    <p className="font-medium">92430000000</p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground text-sm">ОКФС:</span>
-                    <p className="font-medium">16</p>
+                    <p className="font-medium">28.12</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground text-sm">ОКОПФ:</span>
                     <p className="font-medium">12300</p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground text-sm">ОКТМО:</span>
-                    <p className="font-medium">92730000001</p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground text-sm">ОКОГУ:</span>
-                    <p className="font-medium">4210014</p>
                   </div>
                 </div>
               </div>
             </div>
 
             <Separator className="my-8" />
-
-            {/* Bank Details */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-lg border-b pb-2 flex items-center gap-2">
-                <FileText className="h-5 w-5 text-primary" />
-                Банковские реквизиты
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-3">
-                  <div>
-                    <span className="text-muted-foreground text-sm">Рублевый счет:</span>
-                    <p className="font-medium font-mono">40702810434010016915</p>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div>
-                    <span className="text-muted-foreground text-sm">Банк:</span>
-                    <p className="font-medium">ООО КБЭР «Банк Казани» Центральный офис г. Казань</p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground text-sm">Кор.счет:</span>
-                    <p className="font-medium font-mono">30101810100000000844</p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground text-sm">БИК:</span>
-                    <p className="font-medium font-mono">049205844</p>
-                  </div>
-                </div>
-              </div>
-            </div>
           </Card>
         </div>
       </div>
