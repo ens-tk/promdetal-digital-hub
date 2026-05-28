@@ -33,8 +33,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
   const handleDownloadRequisites = () => {
     const link = document.createElement("a");
-    link.href = "/files/Реквизиты ENS Group Альфа Банк рубли.docx";
-    link.download = "Реквизиты ENS Group Альфа Банк рубли.docx";
+    link.href = "/files/Реквизиты ENS Group Альфа Банк рубли.pdf";
+    link.download = "Реквизиты ENS Group Альфа Банк рубли.pdf";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
