@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Equipment from "./pages/Equipment";
 import Search from "./pages/Search";
 import EquipmentDetail from "./pages/EquipmentDetail";
+import EquipmentGroup from "./pages/EquipmentGroup";
 import SolutionDetail from "./pages/SolutionDetail";
 import ProjectDetail from "./pages/ProjectDetail";
 import Projects from "./pages/Projects";
@@ -48,6 +49,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/search" element={<Search />} />
               <Route path="/equipment" element={<Equipment />} />
+              <Route path="/equipment/group/:id" element={<EquipmentGroup />} />
               <Route path="/equipment/:id" element={<EquipmentDetail />} />
               <Route path="/solution/:id" element={<SolutionDetail />} />
               <Route path="/projects" element={<Projects />} />
