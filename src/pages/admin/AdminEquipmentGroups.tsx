@@ -21,7 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Search, Upload } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 
 interface EquipmentGroup {
@@ -44,6 +44,7 @@ const AdminEquipmentGroups = () => {
     coverImageFile: null as File | null,
     imagePreview: "",
   });
+  const [coverImageRemoved, setCoverImageRemoved] = useState(false);
 
   // ------------------------
   // Load groups + images
@@ -86,6 +87,7 @@ const AdminEquipmentGroups = () => {
   const handleCreate = () => {
     setEditingItem(null);
     setFormData({ title: "", description: "", coverImageFile: null, imagePreview: "" });
+    setCoverImageRemoved(false);
     setIsDialogOpen(true);
   };
 
@@ -97,6 +99,7 @@ const AdminEquipmentGroups = () => {
       coverImageFile: null,
       imagePreview: images[item.id] || "",
     });
+    setCoverImageRemoved(false);
     setIsDialogOpen(true);
   };
 
@@ -144,7 +147,7 @@ const AdminEquipmentGroups = () => {
     e.preventDefault();
 
     try {
-      let coverImageId = editingItem?.coverImage?.id || null;
+      let coverImageId = coverImageRemoved ? null : (editingItem?.coverImage?.id || null);
 
       if (formData.coverImageFile) {
         coverImageId = await uploadFile(formData.coverImageFile);
@@ -257,12 +260,24 @@ const AdminEquipmentGroups = () => {
             <div className="space-y-2">
               <Label>Изображение</Label>
               {formData.imagePreview && (
-                <div className="mb-2">
+                <div className="relative inline-block mb-2">
                   <img
                     src={formData.imagePreview}
                     alt="Preview"
                     className="max-w-xs max-h-64 object-contain rounded border"
                   />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    onClick={() => {
+                      setFormData({ ...formData, coverImageFile: null, imagePreview: "" });
+                      setCoverImageRemoved(true);
+                    }}
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
                 </div>
               )}
               <div className="flex items-center gap-2">

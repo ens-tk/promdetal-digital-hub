@@ -239,12 +239,12 @@ setIsDialogOpen(true);
 
   try {
 const mainImageId = imageFile
-  ? await uploadFile(imageFile)      // возвращает UUID
-  : editingItem?.mainImageId || null;
+  ? await uploadFile(imageFile)
+  : formData.mainImageId ?? null;
 
 const hotspotImageId = hotspotImageFile
   ? await uploadFile(hotspotImageFile)
-  : editingItem?.hotspotImageId || null;
+  : formData.hotspotImageId ?? null;
 
 const dto = {
   title: formData.title,
@@ -510,6 +510,7 @@ const dto = {
                 </div>
                 {imagePreview && (
                   <div className="mt-2 space-y-2">
+                    <div className="relative inline-block">
                     <img
                       src={imagePreview || getFileUrl(editingItem?.mainImageId)}
                       alt="Preview"
@@ -519,6 +520,20 @@ const dto = {
                         height: mainImageHeight ? `${mainImageHeight}px` : undefined,
                       }}
                     />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      onClick={() => {
+                        setImagePreview("");
+                        setImageFile(null);
+                        setFormData({ ...formData, mainImageId: null });
+                      }}
+                    >
+                      <X className="w-3 h-3" />
+                    </Button>
+                    </div>
                     <div className="flex items-center gap-2">
                       <Input
                         type="number"
@@ -578,6 +593,7 @@ const dto = {
                 </div>
                 {hotspotImagePreview && (
                   <div className="mt-2 space-y-2">
+                    <div className="relative inline-block">
                     <img
                       src={hotspotImagePreview || getFileUrl(editingItem?.hotspotImageId)}
                       alt="Hotspot Preview"
@@ -587,6 +603,20 @@ const dto = {
                         height: hotspotImageHeight ? `${hotspotImageHeight}px` : undefined,
                       }}
                     />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      onClick={() => {
+                        setHotspotImagePreview("");
+                        setHotspotImageFile(null);
+                        setFormData({ ...formData, hotspotImageId: null });
+                      }}
+                    >
+                      <X className="w-3 h-3" />
+                    </Button>
+                    </div>
                     <div className="flex items-center gap-2">
                       <Input
                         type="number"

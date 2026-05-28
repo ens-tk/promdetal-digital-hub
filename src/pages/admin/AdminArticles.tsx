@@ -27,7 +27,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, X } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -60,6 +60,8 @@ const AdminArticles = () => {
     coverImage: null as File | null,
     relatedArticles: [] as number[],
   });
+  const [coverImagePreview, setCoverImagePreview] = useState<string>("");
+  const [coverImageRemoved, setCoverImageRemoved] = useState(false);
 
   // ------------------------
   // Load articles + images
@@ -150,9 +152,15 @@ const AdminArticles = () => {
     setFormData({
       title: data.title,
       content: data.content || "",
-      coverImage: null, // оставляем null, чтобы не перезаписывать текущую картинку
+      coverImage: null,
       relatedArticles: (data.recommended || []).map((r: any) => r.id),
     });
+    setCoverImagePreview(
+      data.coverImage
+        ? `http://157.22.174.170:8080/promdetal/api/Files/${data.coverImage.id}`
+        : ""
+    );
+    setCoverImageRemoved(false);
   } catch (err) {
     console.error("Error fetching article:", err);
     toast.error("Не удалось загрузить статью для редактирования");
@@ -170,6 +178,8 @@ const AdminArticles = () => {
       coverImage: null,
       relatedArticles: [],
     });
+    setCoverImagePreview("");
+    setCoverImageRemoved(false);
     setIsDialogOpen(true);
   };
 
@@ -179,7 +189,7 @@ const AdminArticles = () => {
     try {
       let coverImage = formData.coverImage
         ? { id: await uploadFile(formData.coverImage) }
-        : editingItem?.coverImage || null;
+        : (coverImageRemoved ? null : editingItem?.coverImage || null);
 
       const payload = {
         title: formData.title,
@@ -370,22 +380,38 @@ const AdminArticles = () => {
 
               <div>
                 <Label>Картинка</Label>
-                {!isCreating && editingItem?.coverImage && !formData.coverImage && (
-                  <p className="text-sm text-muted-foreground mb-1">
-                    Текущая картинка: {editingItem.coverImage.id}
-                  </p>
-                )}
-                {formData.coverImage && (
-                  <p className="text-sm text-muted-foreground mb-1">
-                    Выбран файл: {formData.coverImage.name}
-                  </p>
+                {coverImagePreview && !coverImageRemoved && (
+                  <div className="relative inline-block mt-2 mb-2">
+                    <img
+                      src={coverImagePreview}
+                      alt="Cover"
+                      className="max-w-xs h-24 object-contain rounded border bg-muted p-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      onClick={() => {
+                        setFormData({ ...formData, coverImage: null });
+                        setCoverImagePreview("");
+                        setCoverImageRemoved(true);
+                      }}
+                    >
+                      <X className="w-3 h-3" />
+                    </Button>
+                  </div>
                 )}
                 <Input
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
-                    if (file) setFormData({ ...formData, coverImage: file });
+                    if (file) {
+                      setFormData({ ...formData, coverImage: file });
+                      setCoverImagePreview(URL.createObjectURL(file));
+                      setCoverImageRemoved(false);
+                    }
                   }}
                 />
               </div>

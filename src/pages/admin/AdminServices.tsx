@@ -336,11 +336,26 @@ const AdminServices = () => {
                   )}
                 </div>
                 {imagePreview && (
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="max-w-xs max-h-48 object-contain rounded border mt-2"
-                  />
+                  <div className="relative inline-block mt-2">
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="max-w-xs max-h-48 object-contain rounded border"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      onClick={() => {
+                        setImagePreview("");
+                        setImageFile(null);
+                        setFormData({ ...formData, imageId: null });
+                      }}
+                    >
+                      <X className="w-3 h-3" />
+                    </Button>
+                  </div>
                 )}
               </div>
 

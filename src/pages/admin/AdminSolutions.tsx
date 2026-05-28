@@ -27,7 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Pencil, Trash2, Search, Upload } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -60,6 +60,7 @@ const AdminSolutions = () => {
   const [formData, setFormData] = useState<Partial<Solution>>({});
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
+  const [imageRemoved, setImageRemoved] = useState(false);
 
   const token = localStorage.getItem("token");
 
@@ -90,6 +91,7 @@ const AdminSolutions = () => {
     setFormData({});
     setImageFile(null);
     setImagePreview("");
+    setImageRemoved(false);
     setIsDialogOpen(true);
   };
 
@@ -98,6 +100,7 @@ const handleEdit = (item: Solution) => {
   setFormData(item);
   setImagePreview(item.imageId ? getFileUrl(item.imageId) : "");
   setImageFile(null);
+  setImageRemoved(false);
   setIsDialogOpen(true);
 };
 
@@ -113,7 +116,7 @@ const uploadFile = async (file: File) => {
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   try {
-    let imageId = formData.imageId;
+    let imageId = imageRemoved ? undefined : formData.imageId;
     if (imageFile) {
       imageId = await uploadFile(imageFile);
     }
@@ -300,7 +303,24 @@ const uploadFile = async (file: File) => {
                 <Upload /> Выбрать изображение
               </Button>
               <input type="file" id="solutionImage" className="hidden" onChange={handleImageChange} />
-              {imagePreview && <img src={imagePreview} className="max-w-xs max-h-64 object-contain mt-2 rounded border" />}
+              {imagePreview && (
+                <div className="relative inline-block mt-2">
+                  <img src={imagePreview} className="max-w-xs max-h-64 object-contain rounded border" />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    onClick={() => {
+                      setImagePreview("");
+                      setImageFile(null);
+                      setImageRemoved(true);
+                    }}
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                </div>
+              )}
 
               {/* Problem, Solution, Result */}
               <Textarea

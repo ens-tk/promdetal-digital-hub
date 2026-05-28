@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Search, Upload } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 
 interface Partner {
@@ -38,6 +38,7 @@ const AdminPartners = () => {
   const [name, setName] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
+  const [imageRemoved, setImageRemoved] = useState(false);
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -88,6 +89,7 @@ const AdminPartners = () => {
     setName("");
     setImageFile(null);
     setImagePreview("");
+    setImageRemoved(false);
     setIsDialogOpen(true);
   };
 
@@ -96,6 +98,7 @@ const AdminPartners = () => {
     setName(item.name);
     setImageFile(null);
     setImagePreview(getImageUrl(item.image));
+    setImageRemoved(false);
     setIsDialogOpen(true);
   };
 
@@ -103,7 +106,7 @@ const AdminPartners = () => {
     e.preventDefault();
 
     try {
-      let image = editingItem?.image ?? null;
+      let image = (imageRemoved ? null : editingItem?.image) ?? null;
 
       if (imageFile) {
         image = { id: await uploadImage(imageFile) };
@@ -262,11 +265,26 @@ const AdminPartners = () => {
                 )}
               </div>
               {imagePreview && (
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="w-full max-w-xs h-24 object-contain rounded border mt-2 bg-muted p-2"
-                />
+                <div className="relative inline-block mt-2">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="w-full max-w-xs h-24 object-contain rounded border bg-muted p-2"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    onClick={() => {
+                      setImagePreview("");
+                      setImageFile(null);
+                      setImageRemoved(true);
+                    }}
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                </div>
               )}
             </div>
 

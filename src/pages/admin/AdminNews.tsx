@@ -23,7 +23,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, X } from "lucide-react";
 import { toast } from "sonner";
 
 interface NewsItem {
@@ -49,6 +49,8 @@ const AdminNews = () => {
     content: "",
     coverImage: null as File | null,
   });
+  const [coverImagePreview, setCoverImagePreview] = useState<string>("");
+  const [coverImageRemoved, setCoverImageRemoved] = useState(false);
 
   // ------------------------
   // Load news + fetch images
@@ -113,6 +115,12 @@ const AdminNews = () => {
       content: item.content || "",
       coverImage: null,
     });
+    setCoverImagePreview(
+      item.coverImage
+        ? `http://157.22.174.170:8080/promdetal/api/Files/${item.coverImage.id}`
+        : ""
+    );
+    setCoverImageRemoved(false);
     setIsDialogOpen(true);
   };
 
@@ -124,6 +132,8 @@ const AdminNews = () => {
       content: "",
       coverImage: null,
     });
+    setCoverImagePreview("");
+    setCoverImageRemoved(false);
     setIsDialogOpen(true);
   };
 
@@ -131,7 +141,9 @@ const AdminNews = () => {
     e.preventDefault();
 
     try {
-      let coverImage = formData.coverImage ? { id: await uploadFile(formData.coverImage) } : null;
+      const coverImage = formData.coverImage
+        ? { id: await uploadFile(formData.coverImage) }
+        : (coverImageRemoved ? null : editingItem?.coverImage || null);
 
       if (isCreating) {
         await api.post("/news", {
@@ -141,7 +153,6 @@ const AdminNews = () => {
         });
         toast.success("Новость создана");
       } else if (editingItem) {
-        coverImage = coverImage || editingItem.coverImage || null;
         await api.put(`/news/${editingItem.id}`, {
           title: formData.title,
           content: formData.content,
@@ -286,23 +297,38 @@ const AdminNews = () => {
 
             <div>
               <Label>Картинка</Label>
-              {/* Текущая картинка только при редактировании */}
-              {!isCreating && editingItem?.coverImage && !formData.coverImage && (
-                <p className="text-sm text-muted-foreground mb-1">
-                  {`Текущая картинка: ${editingItem.coverImage.id}`}
-                </p>
-              )}
-              {formData.coverImage && (
-                <p className="text-sm text-muted-foreground mb-1">
-                  {`Выбран файл: ${formData.coverImage.name}`}
-                </p>
+              {coverImagePreview && !coverImageRemoved && (
+                <div className="relative inline-block mt-2 mb-2">
+                  <img
+                    src={coverImagePreview}
+                    alt="Cover"
+                    className="max-w-xs h-24 object-contain rounded border bg-muted p-1"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    onClick={() => {
+                      setFormData({ ...formData, coverImage: null });
+                      setCoverImagePreview("");
+                      setCoverImageRemoved(true);
+                    }}
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                </div>
               )}
               <Input
                 type="file"
                 accept="image/*"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
-                  if (file) setFormData({ ...formData, coverImage: file });
+                  if (file) {
+                    setFormData({ ...formData, coverImage: file });
+                    setCoverImagePreview(URL.createObjectURL(file));
+                    setCoverImageRemoved(false);
+                  }
                 }}
               />
             </div>
