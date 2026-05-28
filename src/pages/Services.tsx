@@ -1,40 +1,32 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Settings, Cpu, Wrench, HeadphonesIcon } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { api } from "@/lib/api";
+import { getIconById } from "@/components/admin/EquipmentIconPicker";
+import { Wrench } from "lucide-react";
 
-const services = [
-  {
-    id: "design",
-    title: "Комплексное проектирование",
-    description: "Разработка проектной документации для промышленных объектов любой сложности",
-    icon: Settings,
-    features: ["Технико-экономическое обоснование", "Рабочая документация", "Авторский надзор"],
-  },
-  {
-    id: "automation",
-    title: "Комплексная автоматизация производства",
-    description: "Внедрение современных систем автоматизации для повышения эффективности",
-    icon: Cpu,
-    features: ["SCADA системы", "ПЛК программирование", "Интеграция оборудования"],
-  },
-  {
-    id: "commissioning",
-    title: "Пусконаладочные работы",
-    description: "Профессиональный запуск и настройка промышленного оборудования",
-    icon: Wrench,
-    features: ["Монтаж оборудования", "Наладка систем", "Обучение персонала"],
-  },
-  {
-    id: "maintenance",
-    title: "Сервисное обслуживание",
-    description: "Техническая поддержка и регулярное обслуживание оборудования",
-    icon: HeadphonesIcon,
-    features: ["Плановое ТО", "Аварийный ремонт", "Поставка запчастей"],
-  },
-];
+interface Service {
+  id: number;
+  title: string;
+  description: string;
+  imageId?: string | null;
+  features: string[];
+  iconId?: string | null;
+}
 
 const Services = () => {
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api
+      .get<Service[]>("/services")
+      .then((res) => setServices(Array.isArray(res.data) ? res.data : []))
+      .catch((err) => console.error("Ошибка загрузки услуг:", err))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -50,36 +42,52 @@ const Services = () => {
       {/* Services Grid */}
       <section className="py-16">
         <div className="container">
-          <div className="grid md:grid-cols-2 gap-8">
-            {services.map((service) => (
-              <Card key={service.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-primary/10 rounded-lg">
-                      <service.icon className="h-8 w-8 text-primary" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-xl">{service.title}</CardTitle>
-                      <CardDescription className="mt-1">{service.description}</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 mb-6">
-                    {service.features.map((feature, index) => (
-                      <li key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  <Button asChild variant="outline">
-                    <Link to={`/services/${service.id}`}>Подробнее</Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          {loading ? (
+            <div className="text-center text-muted-foreground">Загрузка...</div>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-8">
+              {services.map((service) => {
+                const iconData = service.iconId ? getIconById(service.iconId) : null;
+                const IconComponent = iconData?.icon ?? Wrench;
+
+                return (
+                  <Card key={service.id} className="hover:shadow-lg transition-shadow">
+                    <CardHeader>
+                      <div className="flex items-center gap-4">
+                        <div className="p-3 bg-primary/10 rounded-lg">
+                          <IconComponent className="h-8 w-8 text-primary" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-xl">{service.title}</CardTitle>
+                          <CardDescription className="mt-1 line-clamp-2">
+                            {service.description}
+                          </CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      {service.features.length > 0 && (
+                        <ul className="space-y-2 mb-6">
+                          {service.features.map((feature, index) => (
+                            <li
+                              key={index}
+                              className="flex items-center gap-2 text-sm text-muted-foreground"
+                            >
+                              <div className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
+                              {feature}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      <Button asChild variant="outline">
+                        <Link to={`/services/${service.id}`}>Подробнее</Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 

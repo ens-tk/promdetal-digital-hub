@@ -1,7 +1,7 @@
 import HeroCarousel from "@/components/home/HeroCarousel";
 import EquipmentCategories from "@/components/home/EquipmentCategories";
 import PartnersSection from "@/components/home/PartnersSection";
-import DeliveryMap from "@/components/home/DeliveryMap";
+// import DeliveryMap from "@/components/home/DeliveryMap";
 
 const Index = () => {
   return (
@@ -11,7 +11,7 @@ const Index = () => {
       </div>
       <EquipmentCategories />
       <PartnersSection />
-      <DeliveryMap />
+      {/* <DeliveryMap /> */}
     </div>
   );
 };

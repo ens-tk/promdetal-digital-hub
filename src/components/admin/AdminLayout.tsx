@@ -1,15 +1,16 @@
 import { Link, useLocation, useNavigate, Outlet } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { 
-  Newspaper, 
-  Layers, 
-  Wrench, 
+import {
+  Newspaper,
+  Layers,
+  Wrench,
   Lightbulb,
   LogOut,
   Menu,
   X,
   FileText,
-  Handshake
+  Handshake,
+  ConciergeBell
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -21,6 +22,7 @@ const menuItems = [
   { title: "Оборудование", href: "/admin/equipment", icon: Wrench },
   { title: "Решения", href: "/admin/solutions", icon: Lightbulb },
   { title: "Партнёры", href: "/admin/partners", icon: Handshake },
+  { title: "Услуги", href: "/admin/services", icon: ConciergeBell },
 ];
 
 const AdminLayout = () => {

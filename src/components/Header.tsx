@@ -197,64 +197,16 @@ const Header = () => {
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
-              {/* Услуги и сервисы - с подменю */}
+              {/* Услуги и сервисы - простая ссылка */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent text-sm font-medium text-foreground/80 hover:text-primary hover:bg-transparent data-[state=open]:bg-transparent">
-                  Услуги и сервисы
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="fixed left-0 right-0 w-screen bg-background border-b shadow-lg">
-                    <div className="container py-6">
-                      <div className="grid grid-cols-2 gap-8">
-                        <div>
-                          <h3 className="font-semibold text-foreground mb-4">Проектирование</h3>
-                          <ul className="space-y-2">
-                            <li>
-                              <NavigationMenuLink asChild>
-                                <Link to="/services" className="block py-2 text-sm font-medium text-primary hover:opacity-80 transition-opacity">
-                                  Все услуги →
-                                </Link>
-                              </NavigationMenuLink>
-                            </li>
-                            <li>
-                              <NavigationMenuLink asChild>
-                                <Link to="/services/design" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                                  Комплексное проектирование
-                                </Link>
-                              </NavigationMenuLink>
-                            </li>
-                            <li>
-                              <NavigationMenuLink asChild>
-                                <Link to="/services/automation" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                                  Комплексная автоматизация производства
-                                </Link>
-                              </NavigationMenuLink>
-                            </li>
-                          </ul>
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-foreground mb-4">Сервис</h3>
-                          <ul className="space-y-2">
-                            <li>
-                              <NavigationMenuLink asChild>
-                                <Link to="/services/commissioning" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                                  Пусконаладочные работы
-                                </Link>
-                              </NavigationMenuLink>
-                            </li>
-                            <li>
-                              <NavigationMenuLink asChild>
-                                <Link to="/services/maintenance" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                                  Сервисное обслуживание
-                                </Link>
-                              </NavigationMenuLink>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </NavigationMenuContent>
+                <NavigationMenuLink asChild>
+                  <Link
+                    to="/services"
+                    className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
+                  >
+                    Услуги и сервисы
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
 
               {/* Новости */}
@@ -345,29 +297,13 @@ const Header = () => {
             </div>
 
             {/* Услуги и сервисы */}
-            <div className="space-y-1">
-              <Link
-                to="/services"
-                className="block text-sm font-medium text-foreground/80 hover:text-primary transition-colors py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Услуги и сервисы
-              </Link>
-              <div className="pl-4 space-y-1">
-                <Link to="/services/design" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
-                  Комплексное проектирование
-                </Link>
-                <Link to="/services/automation" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
-                  Комплексная автоматизация
-                </Link>
-                <Link to="/services/commissioning" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
-                  Пусконаладочные работы
-                </Link>
-                <Link to="/services/maintenance" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
-                  Сервисное обслуживание
-                </Link>
-              </div>
-            </div>
+            <Link
+              to="/services"
+              className="block text-sm font-medium text-foreground/80 hover:text-primary transition-colors py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Услуги и сервисы
+            </Link>
 
             {/* Новости */}
             <Link
