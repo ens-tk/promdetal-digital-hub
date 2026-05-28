@@ -26,21 +26,21 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-6">
             <div className="flex items-center gap-1.5">
               <MapPin className="h-3.5 w-3.5" />
-              <span>г. Томск, ул. Промышленная, 25</span>
+              <span>г. Томск, ул. Смирнова, 7/11 стр. 6</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5" />
-              <span>Пн-Пт: 8:00 - 17:00</span>
+              <span>Пн-Пт: 9:00 - 18:00</span>
             </div>
           </div>
           <div className="flex items-center gap-4 md:gap-6 w-full md:w-auto justify-between md:justify-end">
-            <a href="tel:+73822123456" className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
+            <a href="tel:+73822217988" className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
               <Phone className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">+7 (3822) 12-34-56</span>
+              <span className="hidden sm:inline">+7 (382 2) 21- 79- 88</span>
             </a>
-            <a href="mailto:info@promdetal.ru" className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
+            <a href="mailto:info@enspg.ru " className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
               <Mail className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">info@promdetal.ru</span>
+              <span className="hidden sm:inline">info@enspg.ru </span>
             </a>
             <Button
               variant="ghost"
