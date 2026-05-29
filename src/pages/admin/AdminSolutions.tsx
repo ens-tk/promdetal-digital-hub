@@ -65,25 +65,39 @@ const AdminSolutions = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    // Загрузка групп
     api.get("/groups")
       .then(res => {
         if (Array.isArray(res.data)) setGroups(res.data);
         else toast.error("Неверный формат групп");
       })
-      .catch(() => toast.error("Не удалось загрузить группы"));
+      .catch((err) => {
+        const status = err?.response?.status;
+        toast.error(`Не удалось загрузить группы${status ? ` (${status})` : ""}`);
+      });
 
-    // Загрузка решений
     api.get("/cases")
       .then(res => {
-        if (Array.isArray(res.data)) setSolutions(res.data);
-        else toast.error("Неверный формат решений");
+        if (Array.isArray(res.data)) {
+          setSolutions(res.data);
+        } else {
+          console.error("Неверный формат /cases:", res.data);
+          toast.error("Неверный формат решений от сервера");
+        }
       })
-      .catch(() => toast.error("Не удалось загрузить решения"));
+      .catch((err) => {
+        const status = err?.response?.status;
+        const msg = err?.response?.data?.message;
+        console.error("Ошибка загрузки /cases:", err?.response ?? err);
+        if (status === 401 || status === 403) {
+          toast.error("Нет доступа к решениям — попробуйте перелогиниться");
+        } else {
+          toast.error(`Не удалось загрузить решения${msg ? `: ${msg}` : status ? ` (${status})` : ""}`);
+        }
+      });
   }, []);
 
   const filteredSolutions = solutions.filter((s) =>
-    s.title?.toLowerCase().includes(searchQuery.toLowerCase())
+    (s.title ?? "").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleCreate = () => {
