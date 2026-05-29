@@ -134,9 +134,7 @@ const AdminEquipmentGroups = () => {
   const uploadFile = async (file: File) => {
     const data = new FormData();
     data.append("file", file);
-    const res = await api.post("/Files", data, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const res = await api.post("/Files", data);
     return res.data.id;
   };
 

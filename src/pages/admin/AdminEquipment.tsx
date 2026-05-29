@@ -162,15 +162,10 @@ const filteredEquipment = equipment.filter((item) =>
   (item.title ?? "").toLowerCase().includes(searchQuery.toLowerCase())
 );
 
-const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
 const uploadFile = async (file: File) => {
-  const token = localStorage.getItem("token");
   const data = new FormData();
   data.append("file", file);
-  const res = await api.post("/Files", data, {
-    headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
-  });
+  const res = await api.post("/Files", data);
   return res.data.id;
 };
 
@@ -217,9 +212,9 @@ setFormData({
   searchKeywords: item.searchKeywords,
 });
 setImageFile(null);
-setImagePreview(getFileUrl(item.mainImageId));           // <-- URL для preview
+setImagePreview(item.mainImageId ? getFileUrl(item.mainImageId) : "");
 setHotspotImageFile(null);
-setHotspotImagePreview(getFileUrl(item.hotspotImageId));
+setHotspotImagePreview(item.hotspotImageId ? getFileUrl(item.hotspotImageId) : "");
 setIsDialogOpen(true);
 };
 
@@ -261,10 +256,10 @@ const dto = {
 };
 
     if (editingItem) {
-      await api.put(`/equipment/${editingItem.id}`, dto, { headers: { Authorization: `Bearer ${token}` } });
+      await api.put(`/equipment/${editingItem.id}`, dto);
       toast.success("Оборудование обновлено");
     } else {
-      await api.post("/equipment", dto, { headers: { Authorization: `Bearer ${token}` } });
+      await api.post("/equipment", dto);
       toast.success("Оборудование создано");
     }
 
