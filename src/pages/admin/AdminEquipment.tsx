@@ -258,15 +258,25 @@ const dto = {
     if (editingItem) {
       await api.put(`/equipment/${editingItem.id}`, dto);
       toast.success("Оборудование обновлено");
+      setEquipment((prev) =>
+        prev.map((item) =>
+          item.id === editingItem.id
+            ? {
+                ...item,
+                ...formData,
+                mainImageId: mainImageId ?? null,
+                hotspotImageId: hotspotImageId ?? null,
+              }
+            : item
+        )
+      );
     } else {
-      await api.post("/equipment", dto);
+      const res = await api.post<Equipment>("/equipment", dto);
       toast.success("Оборудование создано");
+      setEquipment((prev) => [...prev, res.data]);
     }
 
     setIsDialogOpen(false);
-    // Перезагружаем с сервера, чтобы обновились превью и данные
-    const eqRes = await api.get<Equipment[]>("/equipment");
-    setEquipment(eqRes.data);
   } catch (err) {
     console.error(err);
     toast.error("Ошибка при сохранении оборудования");
