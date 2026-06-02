@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, Award, Target, Globe, Factory, Settings, FileCheck, Wrench, Shield, Building2, ChevronRight, Star, FileText, Building, MessageSquareQuote } from "lucide-react";
+import { Users, Award, Target, Globe, Factory, Settings, FileCheck, Wrench, Shield, Building2, ChevronRight, Star, FileText, Building, MessageSquareQuote, CheckCircle2 } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 
 const About = () => {
@@ -12,32 +12,50 @@ const About = () => {
   };
 
   const technicalSolutions = [
-    "Приёмка порошковых материалов (в том числе из биг бэгов и мешков до 50 кг)",
-    "Пневматическая транспортировка сыпучих",
-    "Складирование и фасование (в биг бэги и мешки клапанного типа)",
-    "Отгрузка мелкодисперсных материалов в автоцементовозы и вагоны хопперы",
-    "Обеспыливание процессов приёмки, перевалки и смешивания материалов",
-    "Оснащение силосов аэрационными системами для эффективной выгрузки",
+    "Приёмка сыпучих материалов, включая разгрузку биг-бэгов и мешков до 50 кг",
+    "Пневматическое транспортирование порошковых материалов",
+    "Складирование, дозирование и фасовка в биг-бэги и клапанные мешки",
+    "Автоматизированная загрузка автоцементовозов и вагонов-хопперов",
+    "Локальное обеспыливание процессов приёмки, транспортирования и смешивания",
+    "Оснащение силосов аэрационными системами для эффективной выгрузки материалов",
     "Разработка программного обеспечения АСУ ТП",
-    "Проектирование и монтаж шкафов пневмоуправления"
+    "Проектирование и изготовление шкафов управления и пневмоуправления",
   ];
 
   const services = [
-    "Технический аудит существующего, либо проектируемого производственного участка",
-    "Анализ задач и поиск индивидуального технического решения",
-    "Подготовка предварительного 3D макета проектируемого участка с привязкой к месту",
-    "Подготовка эскизного проекта проектируемого участка",
-    "Тесное сотрудничество с проектными организациями",
+    "Технический аудит существующих и проектируемых производственных участков",
+    "Разработка индивидуальных инженерных решений",
+    "Создание предварительных 3D-моделей и компоновочных решений",
+    "Подготовка эскизной и проектной документации",
+    "Взаимодействие с техническими службами заказчика и проектными организациями",
     "Изготовление и комплектация оборудования",
-    "Шеф монтажные и пусконаладочные работы",
-    "Техническое сопровождение"
+    "Шеф-монтажные и пусконаладочные работы",
+    "Техническое сопровождение и сервисная поддержка",
+  ];
+
+  const whyUs = [
+    "Более 20 лет инженерного опыта",
+    "Более 50 реализованных проектов",
+    "Индивидуальные решения под конкретные производственные задачи",
+    "Инженерные расчёты и технико-экономическое обоснование решений",
+    "Собственное производство и конструкторская база",
+    "Комплексная реализация проектов «под ключ»",
+  ];
+
+  const offer = [
+    "Технический аудит производственного участка",
+    "Подбор и разработка технического решения",
+    "Проектирование и подготовка документации",
+    "Производство и поставка оборудования",
+    "Шеф-монтаж и ввод в эксплуатацию",
+    "Обучение персонала и техническое сопровождение",
   ];
 
   const stats = [
-    { icon: Users, value: "500+", label: "Довольных клиентов" },
-    { icon: Award, value: "18+", label: "Лет на рынке" },
-    { icon: Target, value: "1000+", label: "Выполненных проектов" },
-    { icon: Globe, value: "50+", label: "Городов поставки" }
+    { icon: Award, value: "20+", label: "Лет инженерного опыта" },
+    { icon: Target, value: "50+", label: "Реализованных проектов" },
+    { icon: Settings, value: "360°", label: "Полный цикл работ" },
+    { icon: Factory, value: "6", label: "Отраслей применения" },
   ];
 
   const industries = [
@@ -46,7 +64,7 @@ const About = () => {
     "Косметическая промышленность",
     "Алюминиевая промышленность",
     "Атомная промышленность",
-    "Пищевая промышленность"
+    "Пищевая промышленность",
   ];
 
   const reviews = [
@@ -62,7 +80,7 @@ const About = () => {
         <div className="container">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">О компании</h1>
           <p className="text-lg md:text-xl text-background/80 max-w-3xl">
-            ENS Group — надежный партнер в области промышленного оборудования для работы с сыпучими материалами
+            Инженерные решения для работы с сыпучими материалами
           </p>
         </div>
       </div>
@@ -104,13 +122,13 @@ const About = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <p className="text-base leading-relaxed text-muted-foreground">
-                    Мы специализируемся на комплексных решениях для работы с сыпучими мелкодисперсными (порошковыми) материалами, 
-                    типа цемент, известь, микрокремнезём, крахмал, в строительной, химической и пищевой промышленности.
+                    ENS Group специализируется на разработке и внедрении комплексных технических решений для предприятий,
+                    работающих с сыпучими и порошковыми материалами: цементом, известью, микрокремнезёмом, крахмалом
+                    и другими продуктами строительной, химической и пищевой промышленности.
                   </p>
                   <p className="text-base leading-relaxed text-muted-foreground">
-                    Специалисты ENS Group имеют высшее техническое образование и длительное время работали на профильных производствах. 
-                    Богатый практический опыт дает возможность подходить к решению поставленных задач с практической стороны 
-                    и учетом особенностей эксплуатации оборудования.
+                    Более 20 лет опыта и 50+ реализованных проектов позволяют нам создавать решения, которые повышают
+                    производительность, снижают потери материала и обеспечивают стабильную работу производственных участков.
                   </p>
                 </div>
                 <Card className="p-6 bg-primary/5 border-primary/20">
@@ -143,12 +161,15 @@ const About = () => {
               </div>
             </section>
 
-            {/* Технические решения */}
+            {/* Решения для всех этапов */}
             <section>
-              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground flex items-center gap-2">
+              <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground flex items-center gap-2">
                 <Settings className="h-6 w-6 text-primary" />
-                Технические решения
+                Решения для всех этапов технологического процесса
               </h2>
+              <p className="text-muted-foreground mb-6">
+                Мы разрабатываем и внедряем решения для ключевых участков производства:
+              </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {technicalSolutions.map((solution, index) => (
                   <Card key={index} className="p-4 flex items-start gap-3">
@@ -161,22 +182,60 @@ const About = () => {
               </div>
             </section>
 
-            {/* Что мы предлагаем */}
+            {/* От идеи до запуска */}
             <section className="bg-muted/30 -mx-4 px-4 py-8 md:-mx-8 md:px-8 rounded-xl">
-              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground flex items-center gap-2">
+              <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground flex items-center gap-2">
                 <Wrench className="h-6 w-6 text-primary" />
-                Что мы предлагаем
+                От идеи до запуска оборудования
               </h2>
+              <p className="text-muted-foreground mb-6">
+                Мы сопровождаем проект на всех этапах — от анализа задачи до ввода оборудования в эксплуатацию. Наши компетенции включают:
+              </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {services.map((service, index) => (
                   <Card key={index} className="p-4 bg-background">
                     <div className="w-8 h-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center mb-3 text-sm font-bold">
-                      {String(index + 1).padStart(2, '0')}
+                      {String(index + 1).padStart(2, "0")}
                     </div>
                     <p className="text-sm text-foreground">{service}</p>
                   </Card>
                 ))}
               </div>
+            </section>
+
+            {/* Почему выбирают ENS Group */}
+            <section>
+              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground flex items-center gap-2">
+                <Award className="h-6 w-6 text-primary" />
+                Почему выбирают ENS Group
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {whyUs.map((item, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-muted-foreground">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Помогаем решать сложные задачи */}
+            <section className="bg-primary/5 border border-primary/20 rounded-xl p-6 md:p-8">
+              <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground">
+                Помогаем решать сложные производственные задачи
+              </h2>
+              <p className="text-muted-foreground mb-6">ENS Group предлагает:</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {offer.map((item, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-foreground">{item}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-6 text-sm font-medium text-primary">
+                ENS Group — инженерные решения для эффективной работы с сыпучими материалами.
+              </p>
             </section>
           </TabsContent>
 
@@ -186,13 +245,13 @@ const About = () => {
               <Building2 className="h-6 w-6 text-primary" />
               История компании
             </h2>
-            
+
             <Card className="p-6 border-l-4 border-l-primary">
               <h3 className="text-lg font-semibold mb-3 text-primary">2005 год — Основание</h3>
               <p className="text-muted-foreground leading-relaxed">
-                История компании «Промдеталь» началась в 2005 году благодаря семейной инициативе — 
-                братьев Энса Дмитрия Владимировича и Энса Алексея Владимировича, а также их отца 
-                Энса Владимира Теобальдовича. Они решили организовать собственное дело, связанное с 
+                История компании «Промдеталь» началась в 2005 году благодаря семейной инициативе —
+                братьев Энса Дмитрия Владимировича и Энса Алексея Владимировича, а также их отца
+                Энса Владимира Теобальдовича. Они решили организовать собственное дело, связанное с
                 поставкой производственно-технического оборудования на энергетические объекты РАО ЕЭС России.
               </p>
             </Card>
@@ -218,9 +277,9 @@ const About = () => {
             <Card className="p-6 border-l-4 border-l-accent">
               <h3 className="text-lg font-semibold mb-3 text-accent">2009 год — Развитие</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Первоначально деятельность велась преимущественно на строительном рынке Сибири, однако 
-                экономический кризис 2009 года заставил компанию адаптироваться и задуматься о производстве 
-                собственных изделий для обеспечения стабильности качества и снижения издержек. Это привело к 
+                Первоначально деятельность велась преимущественно на строительном рынке Сибири, однако
+                экономический кризис 2009 года заставил компанию адаптироваться и задуматься о производстве
+                собственных изделий для обеспечения стабильности качества и снижения издержек. Это привело к
                 строительству собственного производственного помещения и постепенному расширению бизнеса.
               </p>
             </Card>
@@ -228,9 +287,9 @@ const About = () => {
             <Card className="p-6 bg-primary/5 border-primary/20">
               <h3 className="text-lg font-semibold mb-3 text-primary">Сегодня</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Сегодня ООО «Промдеталь» представляет собой успешное промышленное предприятие с развитой 
-                производственной базой и квалифицированным персоналом. Компания прошла путь от небольшого 
-                поставщика комплектующих до современного промышленного комплекса, способного выполнять 
+                Сегодня ООО «Промдеталь» представляет собой успешное промышленное предприятие с развитой
+                производственной базой и квалифицированным персоналом. Компания прошла путь от небольшого
+                поставщика комплектующих до современного промышленного комплекса, способного выполнять
                 сложные технические задачи в разных регионах России.
               </p>
             </Card>
@@ -243,8 +302,8 @@ const About = () => {
               <Card className="p-6">
                 <h3 className="text-xl font-bold mb-4 text-foreground">Наша миссия</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Обеспечивать промышленные предприятия качественным оборудованием и инновационными 
-                  решениями для работы с сыпучими материалами, способствуя развитию производственного 
+                  Обеспечивать промышленные предприятия качественным оборудованием и инновационными
+                  решениями для работы с сыпучими материалами, способствуя развитию производственного
                   сектора России.
                 </p>
               </Card>
