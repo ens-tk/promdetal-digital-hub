@@ -167,13 +167,10 @@ const EquipmentDetail = () => {
         {/* DESCRIPTION */}
         <div className="mb-12">
           <h2 className="text-2xl font-bold mb-6">Описание</h2>
-          <div className="columns-1 md:columns-2 gap-8 text-muted-foreground leading-relaxed">
-            {equipment.fullDescription?.split("\n\n").map((paragraph, idx) => (
-              <p key={idx} className="mb-4 break-inside-avoid">
-                {paragraph}
-              </p>
-            ))}
-          </div>
+          <div
+            className="columns-1 md:columns-2 gap-8 text-muted-foreground leading-relaxed prose prose-sm max-w-none"
+            dangerouslySetInnerHTML={{ __html: equipment.fullDescription || "" }}
+          />
         </div>
 
         {/* INTERACTIVE SCHEME */}
