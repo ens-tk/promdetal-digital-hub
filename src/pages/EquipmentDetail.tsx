@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
 import { api } from "@/lib/api";
 import { getIconById } from "@/components/admin/EquipmentIconPicker";
@@ -118,6 +119,11 @@ const EquipmentDetail = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>{equipment.title} — ENS Group</title>
+        <meta name="description" content={equipment.shortDescription || `${equipment.title} — промышленное оборудование от ENS Group. Поставка и монтаж по всей России.`} />
+        <link rel="canonical" href={`https://enspg.ru/equipment/${id}`} />
+      </Helmet>
       <div className="container py-8">
         {/* HERO */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">

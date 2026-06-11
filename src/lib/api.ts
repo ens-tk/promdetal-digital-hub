@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "http://157.22.174.170:8080/promdetal/api",
+  baseURL: "/api",
   withCredentials: true,
 });
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { api } from "@/lib/api";
 
 /* ====== TYPES ====== */
@@ -64,6 +65,11 @@ const EquipmentPage = () => {
   /* ====== UI ====== */
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Оборудование — ENS Group | Промышленные решения</title>
+        <meta name="description" content="Каталог промышленного оборудования ENS Group: пневматический транспорт, дозаторы, фасовочные машины, системы обеспыливания. Поставка по всей России." />
+        <link rel="canonical" href="https://enspg.ru/equipment" />
+      </Helmet>
       {/* Hero */}
       <div className="bg-industrial-dark text-background py-12">
         <div className="container">

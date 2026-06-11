@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import HeroCarousel from "@/components/home/HeroCarousel";
 import EquipmentCategories from "@/components/home/EquipmentCategories";
 import PartnersSection from "@/components/home/PartnersSection";
@@ -13,6 +14,11 @@ const statsStrip = [
 const Index = () => {
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>ENS Group — Промышленное оборудование, поставки и монтаж</title>
+        <meta name="description" content="ENS Group — поставка и монтаж промышленного оборудования: пневматический транспорт, дозирование, фасовка, обеспыливание. Опыт 20+ лет, проекты по всей России." />
+        <link rel="canonical" href="https://enspg.ru/" />
+      </Helmet>
       <div className="container py-8">
         <HeroCarousel />
       </div>

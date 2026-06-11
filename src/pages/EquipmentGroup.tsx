@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { api } from "@/lib/api";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -68,6 +69,11 @@ const EquipmentGroup = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>{group.title} — ENS Group</title>
+        <meta name="description" content={group.description || `${group.title} — промышленное оборудование ENS Group. Поставка и монтаж по всей России.`} />
+        <link rel="canonical" href={`https://enspg.ru/equipment/group/${id}`} />
+      </Helmet>
       {/* Hero */}
       <div className="relative bg-industrial-dark text-background">
         {group.coverImage?.id && (

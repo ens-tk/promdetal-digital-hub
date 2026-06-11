@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
 import { api } from "@/lib/api";
@@ -32,6 +33,11 @@ const News = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Новости — ENS Group</title>
+        <meta name="description" content="Актуальные новости ENS Group: новые проекты, поставки оборудования, отраслевые события и обновления компании." />
+        <link rel="canonical" href="https://enspg.ru/news" />
+      </Helmet>
       {/* Header */}
       <div className="bg-industrial-dark text-background py-12">
         <div className="container">

@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, Award, Target, Globe, Factory, Settings, FileCheck, Wrench, Shield, Building2, ChevronRight, Star, FileText, Building, MessageSquareQuote, CheckCircle2 } from "lucide-react";
@@ -75,6 +76,11 @@ const About = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>О компании — ENS Group</title>
+        <meta name="description" content="ENS Group — более 20 лет на рынке промышленного оборудования. Поставка, монтаж и сервис систем пневматического транспорта, дозирования и обеспыливания." />
+        <link rel="canonical" href="https://enspg.ru/about" />
+      </Helmet>
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-industrial-dark via-industrial-dark to-industrial-gray text-background py-12 md:py-16">
         <div className="container">

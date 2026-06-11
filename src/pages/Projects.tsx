@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { api } from "@/lib/api";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -42,6 +43,11 @@ const Projects = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Проекты — ENS Group</title>
+        <meta name="description" content="Реализованные проекты ENS Group: монтаж и поставка промышленного оборудования для предприятий по всей России. 50+ успешных проектов." />
+        <link rel="canonical" href="https://enspg.ru/projects" />
+      </Helmet>
       {/* Hero */}
       <div className="bg-industrial-dark text-background py-12">
         <div className="container">

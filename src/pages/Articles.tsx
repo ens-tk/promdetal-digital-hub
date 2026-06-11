@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
 import { api } from "@/lib/api";
@@ -62,6 +63,11 @@ const Articles = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Статьи — ENS Group</title>
+        <meta name="description" content="Экспертные статьи ENS Group о промышленном оборудовании, технологиях пневматического транспорта, дозирования и обеспыливания." />
+        <link rel="canonical" href="https://enspg.ru/articles" />
+      </Helmet>
       <div className="bg-industrial-dark text-background py-12">
         <div className="container">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Статьи</h1>

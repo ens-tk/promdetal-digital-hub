@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { api } from "@/lib/api";
 import { ArrowLeft, Calendar, MapPin, Building2, Wrench, Cog } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -64,6 +65,11 @@ const ProjectDetail = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>{project.name} — ENS Group</title>
+        <meta name="description" content={`Проект ENS Group: ${project.name}. Клиент: ${project.client}, ${project.location}.`} />
+        <link rel="canonical" href={`https://enspg.ru/projects/${id}`} />
+      </Helmet>
       {/* Breadcrumb */}
       <div className="bg-muted/50 py-4">
         <div className="container">

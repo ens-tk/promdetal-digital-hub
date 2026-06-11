@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -42,6 +43,11 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Контакты — ENS Group</title>
+        <meta name="description" content="Свяжитесь с ENS Group: адрес, телефон, форма обратной связи. Готовы ответить на ваши вопросы по промышленному оборудованию." />
+        <link rel="canonical" href="https://enspg.ru/contacts" />
+      </Helmet>
       <div className="bg-industrial-dark text-background py-12">
         <div className="container">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Контакты</h1>

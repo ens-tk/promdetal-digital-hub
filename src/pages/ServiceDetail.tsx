@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 import { api } from "@/lib/api";
@@ -58,6 +59,11 @@ const ServiceDetail = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>{service.title} — ENS Group</title>
+        <meta name="description" content={service.description || `${service.title} — услуги ENS Group. Профессиональный монтаж и обслуживание промышленного оборудования.`} />
+        <link rel="canonical" href={`https://enspg.ru/services/${serviceId}`} />
+      </Helmet>
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         {imageUrl ? (
