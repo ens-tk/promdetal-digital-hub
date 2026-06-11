@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Building2 } from "lucide-react";
@@ -73,7 +73,7 @@ const Projects = () => {
             <Link key={project.id} to={`/projects/${project.id}`}>
               <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
                 <img
-  src={project.imageId ? `${api.defaults.baseURL}/Files/${project.imageId}` : "/placeholder.svg"}
+  src={getFileUrl(project.imageId)}
   alt={project.title}
   className="w-full h-48 object-contain"
 />

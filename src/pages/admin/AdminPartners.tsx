@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -61,7 +61,7 @@ const AdminPartners = () => {
 
   const getImageUrl = (image?: { id: string } | null) =>
     image
-      ? `http://157.22.174.170:8080/promdetal/api/Files/${image.id}`
+      ? getFileUrl(image.id)
       : "/placeholder.svg";
 
   // ------------------------

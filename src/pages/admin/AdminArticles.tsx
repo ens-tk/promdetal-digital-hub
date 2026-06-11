@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -157,7 +157,7 @@ const AdminArticles = () => {
     });
     setCoverImagePreview(
       data.coverImage
-        ? `http://157.22.174.170:8080/promdetal/api/Files/${data.coverImage.id}`
+        ? getFileUrl(data.coverImage.id)
         : ""
     );
     setCoverImageRemoved(false);

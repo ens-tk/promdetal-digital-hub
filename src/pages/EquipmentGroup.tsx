@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
@@ -18,9 +18,6 @@ interface Equipment {
   shortDescription: string;
   mainImageId?: string | null;
 }
-
-const getFileUrl = (id?: string | null) =>
-  id ? `http://157.22.174.170:8080/promdetal/api/Files/${id}` : "/placeholder.svg";
 
 const EquipmentGroup = () => {
   const { id } = useParams<{ id: string }>();

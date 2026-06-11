@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Calendar, ArrowLeft } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 
 interface NewsItem {
   id: number;
@@ -18,11 +18,6 @@ const NewsDetail = () => {
   const [news, setNews] = useState<NewsItem | null>(null);
   const [latestNews, setLatestNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const getImageUrl = (coverImage?: { id: string; path: string; name: string } | null) => {
-    if (!coverImage) return "/placeholder.svg";
-    return `http://157.22.174.170:8080/promdetal/api/Files/${coverImage.id}`;
-  };
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -105,7 +100,7 @@ const NewsDetail = () => {
           <div className="lg:col-span-2">
             {news.coverImage && (
               <img
-                src={getImageUrl(news.coverImage)}
+                src={getFileUrl(news.coverImage?.id)}
                 alt={news.title}
                 className="w-full h-64 md:h-80 object-contain rounded-lg mb-6"
               />
@@ -127,7 +122,7 @@ const NewsDetail = () => {
                   <Card className="overflow-hidden hover:shadow-md transition-shadow">
                     {item.coverImage && (
                       <img
-                        src={getImageUrl(item.coverImage)}
+                        src={getFileUrl(item.coverImage?.id)}
                         alt={item.title}
                         className="w-full h-32 object-contain"
                       />

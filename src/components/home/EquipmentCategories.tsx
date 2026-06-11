@@ -3,7 +3,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 
 /* ===== TYPES ===== */
 interface Group {
@@ -57,8 +57,6 @@ const EquipmentCategories = () => {
     loadData().catch(console.error);
   }, []);
 
-  const getImageUrl = (id?: string | null) =>
-  id ? `${api.defaults.baseURL}/Files/${id}` : "/placeholder.svg";
 
   const activeGroup = groups.find((g) => g.id === activeGroupId);
 
@@ -140,7 +138,7 @@ const EquipmentCategories = () => {
                 >
                   <div className="aspect-[4/3] rounded-lg overflow-hidden bg-muted mb-2">
                     <img
-                      src={getImageUrl(item.mainImageId)}
+                      src={getFileUrl(item.mainImageId)}
                       alt={item.title}
                       className="w-full h-full object-contain group-hover/card:scale-105 transition-transform"
                     />

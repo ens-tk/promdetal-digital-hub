@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle } from "lucide-react";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 
 interface Service {
   id: number;
@@ -18,11 +18,6 @@ const ServiceDetail = () => {
   const { serviceId } = useParams<{ serviceId: string }>();
   const [service, setService] = useState<Service | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const getFileUrl = (id?: string | null) =>
-    id
-      ? `http://157.22.174.170:8080/promdetal/api/Files/${id}`
-      : null;
 
   useEffect(() => {
     if (!serviceId) return;
@@ -55,8 +50,6 @@ const ServiceDetail = () => {
     );
   }
 
-  const imageUrl = getFileUrl(service.imageId);
-
   return (
     <div className="min-h-screen">
       <Helmet>
@@ -66,11 +59,11 @@ const ServiceDetail = () => {
       </Helmet>
       {/* Hero Section */}
       <div className="relative overflow-hidden">
-        {imageUrl ? (
+        {service.imageId ? (
           <>
             <div className="h-[400px]">
               <img
-                src={imageUrl}
+                src={getFileUrl(service.imageId)}
                 alt={service.title}
                 className="w-full h-full object-cover"
               />

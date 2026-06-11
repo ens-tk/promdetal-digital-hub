@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 import { getIconById } from "@/components/admin/EquipmentIconPicker";
 
 interface Advantage {
@@ -56,9 +56,6 @@ const getRutubeEmbedUrl = (url?: string) => {
   const match = url.match(/rutube\.ru\/video\/([a-zA-Z0-9]+)/);
   return match ? `https://rutube.ru/play/embed/${match[1]}` : null;
 };
-
-const getFileUrl = (id?: string) =>
-  id ? `http://157.22.174.170:8080/promdetal/api/Files/${id}` : "/placeholder.svg";
 
 /* ===================== COMPONENT ===================== */
 const EquipmentDetail = () => {

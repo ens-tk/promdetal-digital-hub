@@ -5,7 +5,7 @@ import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
 import { Calendar, ArrowLeft } from "lucide-react";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 
 interface FileInfo {
   id: string;
@@ -42,7 +42,7 @@ const ArticleDetail = () => {
   }, [id]);
 
   const getImageUrl = (image?: FileInfo | null) =>
-    image?.id ? `${api.defaults.baseURL}/Files/${image.id}` : "/placeholder.svg";
+    getFileUrl(image?.id);
 
   const formatDate = (iso?: string) => {
     if (!iso) return "";

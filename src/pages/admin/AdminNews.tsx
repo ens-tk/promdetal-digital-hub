@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -117,7 +117,7 @@ const AdminNews = () => {
     });
     setCoverImagePreview(
       item.coverImage
-        ? `http://157.22.174.170:8080/promdetal/api/Files/${item.coverImage.id}`
+        ? getFileUrl(item.coverImage.id)
         : ""
     );
     setCoverImageRemoved(false);

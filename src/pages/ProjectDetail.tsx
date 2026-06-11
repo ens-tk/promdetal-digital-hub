@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 import { ArrowLeft, Calendar, MapPin, Building2, Wrench, Cog } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -26,11 +26,6 @@ const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const getFileUrl = (id?: string) => {
-    if (!id) return "/placeholder.svg";
-    return `${api.defaults.baseURL}/Files/${id}`;
-  };
 
   useEffect(() => {
     if (!id) return;

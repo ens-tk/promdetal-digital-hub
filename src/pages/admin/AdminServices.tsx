@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -53,11 +53,6 @@ const AdminServices = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
-
-  const getFileUrl = (id?: string | null) =>
-    id
-      ? `http://157.22.174.170:8080/promdetal/api/Files/${id}`
-      : "/placeholder.svg";
 
   const loadServices = async () => {
     try {

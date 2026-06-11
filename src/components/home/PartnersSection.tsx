@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 
 interface Partner {
   id: number;
@@ -21,7 +21,7 @@ const PartnersSection = () => {
   const getLogoUrl = (image?: { id: string; path?: string } | string) => {
     if (!image) return "/placeholder.svg"; // заглушка
     if (typeof image === "string") return image.startsWith("http") ? image : `/uploads/${image}`;
-    if ("id" in image && image.id) return `${api.defaults.baseURL}/Files/${image.id}`;
+    if ("id" in image && image.id) return getFileUrl(image.id);
     return "/placeholder.svg";
   };
 

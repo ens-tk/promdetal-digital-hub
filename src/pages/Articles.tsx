@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 
 interface FileInfo {
   id: string;
@@ -43,7 +43,7 @@ const Articles = () => {
   const getImageUrl = (image?: FileInfo | null) => {
     if (!image) return "/placeholder.svg";
     return image.id
-      ? `${api.defaults.baseURL}/Files/${image.id}`
+      ? getFileUrl(image.id)
       : image.path
       ? `${api.defaults.baseURL}/${image.path}`
       : "/placeholder.svg";

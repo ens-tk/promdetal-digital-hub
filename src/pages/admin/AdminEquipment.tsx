@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { api } from "@/lib/api"; // твой axios
+import { api, getFileUrl } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -170,9 +170,6 @@ const uploadFile = async (file: File) => {
 };
 
 
-
-const getFileUrl = (id?: string) =>
-  id ? `http://157.22.174.170:8080/promdetal/api/Files/${id}` : "/placeholder.svg";
 
   const handleCreate = () => {
     setEditingItem(null);

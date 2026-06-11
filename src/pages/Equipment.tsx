@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 
 /* ====== TYPES ====== */
 interface Equipment {
@@ -97,7 +97,7 @@ const EquipmentPage = () => {
               <Link to={`/equipment/group/${group.id}`} className="block">
                 <div className="relative h-52 rounded-lg overflow-hidden mb-4">
                   <img
-  src={group.coverImage?.id ? `${api.defaults.baseURL}/Files/${group.coverImage.id}` : "/placeholder.svg"}
+  src={getFileUrl(group.coverImage?.id)}
   alt={group.title}
   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
 />

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
-import { api } from "@/lib/api";
+import { api, getFileUrl } from "@/lib/api";
 
 interface NewsItem {
   id: number;
@@ -63,7 +63,7 @@ const News = () => {
                 <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
                   {item.coverImage ? (
                     <img
-                      src={`http://157.22.174.170:8080/promdetal/api/Files/${item.coverImage.id}`}
+                      src={getFileUrl(item.coverImage.id)}
                       alt={item.title}
                       className="w-full h-48 object-contain"
                     />
