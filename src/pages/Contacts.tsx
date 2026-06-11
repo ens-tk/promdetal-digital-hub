@@ -1,14 +1,15 @@
 import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+// import { Input } from "@/components/ui/input";
+// import { Textarea } from "@/components/ui/textarea";
+// import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Mail, Phone, MapPin, Send, Download, Building2, FileText } from "lucide-react";
+import { Mail, Phone, MapPin, /*Send,*/ Download, Building2, /*FileText*/ } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { api } from "@/lib/api";
+// import { api } from "@/lib/api";
 
 const Contacts = () => {
+/* handleSubmit — временно скрыто вместе с формой
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
 
@@ -31,6 +32,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     alert("Не удалось отправить сообщение. Попробуйте позже.");
   }
 };
+*/
 
   const handleDownloadRequisites = () => {
     const link = document.createElement("a");
@@ -58,9 +60,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       </div>
 
       <div className="container py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <div>
+        <div className="grid grid-cols-1 gap-12">
+          {/* Contact Form — временно скрыто */}
+          {/* <div>
             <h2 className="text-2xl font-bold mb-6">Отправить сообщение</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
@@ -83,7 +85,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 Отправить сообщение
               </Button>
             </form>
-          </div>
+          </div> */}
 
           {/* Contact Info */}
           <div className="space-y-6">
