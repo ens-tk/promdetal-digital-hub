@@ -36,10 +36,10 @@ const Services = () => {
         <link rel="canonical" href="https://enspg.ru/services" />
       </Helmet>
       {/* Hero Section */}
-      <section className="bg-industrial-dark text-primary-foreground py-16">
+      <section className="bg-industrial-dark text-background py-16">
         <div className="container">
           <h1 className="text-4xl font-bold mb-4">Услуги и сервисы</h1>
-          <p className="text-lg text-primary-foreground/80 max-w-2xl">
+          <p className="text-lg text-background/80 max-w-2xl">
             Полный спектр услуг для промышленных предприятий: от проектирования до сервисного обслуживания
           </p>
         </div>
