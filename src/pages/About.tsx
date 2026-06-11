@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, Award, Target, Globe, Factory, Settings, FileCheck, Wrench, Shield, Building2, ChevronRight, Star, FileText, Building, MessageSquareQuote, CheckCircle2 } from "lucide-react";
+import { Users, Award, Target, Globe, Factory, Settings, Wrench, Shield, Building2, ChevronRight, Building, CheckCircle2 } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 
 const About = () => {
@@ -68,12 +68,6 @@ const About = () => {
     "Пищевая промышленность",
   ];
 
-  const reviews = [
-    { company: "ООО Сибирский Цемент", text: "Отличное качество оборудования и профессиональный подход к решению задач.", rating: 5 },
-    { company: "АО Химпром", text: "Благодарим за оперативную поставку и техническое сопровождение проекта.", rating: 5 },
-    { company: "ЗАО Стройматериалы", text: "Надежный партнер с многолетним опытом. Рекомендуем!", rating: 5 },
-  ];
-
   return (
     <div className="min-h-screen">
       <Helmet>
@@ -105,18 +99,6 @@ const About = () => {
             <TabsTrigger value="mission" className="flex-1 min-w-[120px] data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
               <Target className="h-4 w-4 mr-2" />
               Миссия
-            </TabsTrigger>
-            <TabsTrigger value="reviews" className="flex-1 min-w-[120px] data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-              <MessageSquareQuote className="h-4 w-4 mr-2" />
-              Отзывы
-            </TabsTrigger>
-            <TabsTrigger value="docs" className="flex-1 min-w-[120px] data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-              <FileText className="h-4 w-4 mr-2" />
-              Документация
-            </TabsTrigger>
-            <TabsTrigger value="requisites" className="flex-1 min-w-[120px] data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-              <FileCheck className="h-4 w-4 mr-2" />
-              Реквизиты
             </TabsTrigger>
           </TabsList>
 
@@ -337,109 +319,6 @@ const About = () => {
             </div>
           </TabsContent>
 
-          {/* Отзывы */}
-          <TabsContent value="reviews" className="space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground flex items-center gap-2">
-              <MessageSquareQuote className="h-6 w-6 text-primary" />
-              Отзывы наших клиентов
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {reviews.map((review, index) => (
-                <Card key={index} className="p-6">
-                  <div className="flex gap-1 mb-3">
-                    {Array.from({ length: review.rating }).map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-primary text-primary" />
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground mb-4 italic">"{review.text}"</p>
-                  <p className="font-semibold text-foreground">{review.company}</p>
-                </Card>
-              ))}
-            </div>
-            <Card className="p-6 bg-muted/30 text-center">
-              <p className="text-muted-foreground">
-                Здесь будут отображаться реальные отзывы клиентов, загруженные из базы данных.
-              </p>
-            </Card>
-          </TabsContent>
-
-          {/* Документация */}
-          <TabsContent value="docs" className="space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground flex items-center gap-2">
-              <FileText className="h-6 w-6 text-primary" />
-              Документация
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
-                <FileCheck className="h-8 w-8 text-primary mb-3" />
-                <h3 className="font-semibold text-foreground mb-2">Сертификаты качества</h3>
-                <p className="text-sm text-muted-foreground">Сертификаты соответствия продукции</p>
-              </Card>
-              <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
-                <FileCheck className="h-8 w-8 text-primary mb-3" />
-                <h3 className="font-semibold text-foreground mb-2">Лицензии</h3>
-                <p className="text-sm text-muted-foreground">Лицензии на ведение деятельности</p>
-              </Card>
-              <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
-                <FileCheck className="h-8 w-8 text-primary mb-3" />
-                <h3 className="font-semibold text-foreground mb-2">Благодарственные письма</h3>
-                <p className="text-sm text-muted-foreground">Отзывы от партнеров и клиентов</p>
-              </Card>
-            </div>
-            <Card className="p-6 bg-muted/30 text-center">
-              <p className="text-muted-foreground">
-                Документы будут загружены из базы данных с возможностью скачивания.
-              </p>
-            </Card>
-          </TabsContent>
-
-          {/* Реквизиты */}
-          <TabsContent value="requisites" className="space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground flex items-center gap-2">
-              <FileCheck className="h-6 w-6 text-primary" />
-              Реквизиты компании
-            </h2>
-            <Card className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Полное наименование</p>
-                    <p className="font-medium text-foreground">Общество с ограниченной ответственностью «Промдеталь»</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Сокращенное наименование</p>
-                    <p className="font-medium text-foreground">ООО «Промдеталь»</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">ИНН</p>
-                    <p className="font-medium text-foreground">7017000000</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">КПП</p>
-                    <p className="font-medium text-foreground">701701001</p>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm text-muted-foreground">ОГРН</p>
-                    <p className="font-medium text-foreground">1057000000000</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Юридический адрес</p>
-                    <p className="font-medium text-foreground">634000, г. Томск, ул. Промышленная, д. 25</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Банк</p>
-                    <p className="font-medium text-foreground">ПАО Сбербанк</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Р/с</p>
-                    <p className="font-medium text-foreground">40702810000000000000</p>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </TabsContent>
         </Tabs>
       </div>
     </div>

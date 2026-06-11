@@ -51,18 +51,13 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/about/suppliers" className="text-background/80 hover:text-background">
-                  Для поставщиков
+                <Link to="/contacts" className="text-background/80 hover:text-background">
+                  Контакты
                 </Link>
               </li>
               <li>
-                <Link to="/about/documents" className="text-background/80 hover:text-background">
-                  Документация
-                </Link>
-              </li>
-              <li>
-                <Link to="/about/privacy" className="text-background/80 hover:text-background">
-                  Конфиденциальность
+                <Link to="/contacts" className="text-background/80 hover:text-background">
+                  Реквизиты
                 </Link>
               </li>
             </ul>
@@ -74,15 +69,15 @@ const Footer = () => {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 mt-1 flex-shrink-0" />
-                <span className="text-background/80">г. Томск, Россия</span>
+                <span className="text-background/80">г. Томск, ул. Смирнова, 7/11 стр. 6</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4 flex-shrink-0" />
-                <span className="text-background/80">+7 (XXX) XXX-XX-XX</span>
+                <span className="text-background/80">+7 (382 2) 21-79-88</span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 flex-shrink-0" />
-                <span className="text-background/80">info@promdetal.ru</span>
+                <span className="text-background/80">info@enspg.ru</span>
               </li>
             </ul>
           </div>
