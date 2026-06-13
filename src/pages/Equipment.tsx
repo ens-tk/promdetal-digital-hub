@@ -38,18 +38,15 @@ const EquipmentPage = () => {
 
         setGroups(groupsArray);
 
-        /* 2️⃣ Для каждой группы получаем оборудование */
+        /* 2️⃣ Получаем всё оборудование одним запросом и группируем на клиенте */
+        const eqRes = await api.get("/equipment");
+        const allEquipment: Equipment[] = Array.isArray(eqRes.data) ? eqRes.data : [];
+
         const equipmentMap: Record<number, Equipment[]> = {};
-
-        await Promise.all(
-          groupsArray.map(async (group) => {
-            const eqRes = await api.get("/equipment", {
-              params: { groupId: group.id },
-            });
-
-            equipmentMap[group.id] = Array.isArray(eqRes.data) ? eqRes.data : [];
-          })
-        );
+        for (const eq of allEquipment) {
+          if (!equipmentMap[eq.groupId]) equipmentMap[eq.groupId] = [];
+          equipmentMap[eq.groupId].push(eq);
+        }
 
         setEquipmentByGroup(equipmentMap);
       } catch (e) {
