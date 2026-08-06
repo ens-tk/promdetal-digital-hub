@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Menu, X, Search, MapPin, Clock, Phone, Mail, Globe, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
@@ -15,8 +16,12 @@ import ensLogo from "@/assets/ens-logo-B60Hzgrb.png";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [language, setLanguage] = useState<"ru" | "en">("ru");
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+
+  const toggleLanguage = () => {
+    i18n.changeLanguage(i18n.language === "ru" ? "en" : "ru");
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full">
@@ -26,11 +31,11 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-6">
             <div className="flex items-center gap-1.5">
               <MapPin className="h-3.5 w-3.5" />
-              <span>г. Томск, ул. Смирнова, 7/11 стр. 6</span>
+              <span>{t("header.address")}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5" />
-              <span>Пн-Пт: 9:00 - 18:00</span>
+              <span>{t("header.hours")}</span>
             </div>
           </div>
           <div className="flex items-center gap-4 md:gap-6 w-full md:w-auto justify-between md:justify-end">
@@ -58,17 +63,17 @@ const Header = () => {
                 onClick={() => navigate("/admin/news")}
               >
                 <Settings className="h-4 w-4" />
-                <span className="hidden sm:inline">Админка</span>
+                <span className="hidden sm:inline">{t("header.admin")}</span>
               </Button>
             )}
             <Button
               variant="ghost"
               size="sm"
               className="h-7 px-2 gap-1 text-primary-foreground hover:bg-primary-foreground/10"
-              onClick={() => setLanguage(language === "ru" ? "en" : "ru")}
+              onClick={toggleLanguage}
             >
               <Globe className="h-4 w-4" />
-              <span className="uppercase font-medium">{language}</span>
+              <span className="uppercase font-medium">{i18n.language}</span>
             </Button>
           </div>
         </div>
@@ -84,7 +89,7 @@ const Header = () => {
                 ENS Group
               </span>
               <span className="text-base text-muted-foreground font-medium tracking-wide uppercase">
-                Промышленное оборудование
+                {t("header.subtitle")}
               </span>
             </div>
           </Link>
@@ -95,71 +100,71 @@ const Header = () => {
               {/* О компании - с подменю */}
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="bg-transparent text-sm font-medium text-foreground/80 hover:text-primary hover:bg-transparent data-[state=open]:bg-transparent">
-                  О компании
+                  {t("header.about")}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <div className="fixed left-0 right-0 w-screen bg-background border-b shadow-lg">
                     <div className="container py-6">
                       <div className="grid grid-cols-3 gap-8">
                         <div>
-                          <h3 className="font-semibold text-foreground mb-4">О нас</h3>
+                          <h3 className="font-semibold text-foreground mb-4">{t("header.about")}</h3>
                           <ul className="space-y-2">
                             <li>
                               <NavigationMenuLink asChild>
                                 <Link to="/about" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                                  Обзор компании
+                                  {t("header.aboutOverview")}
                                 </Link>
                               </NavigationMenuLink>
                             </li>
                             <li>
                               <NavigationMenuLink asChild>
                                 <Link to="/about?tab=history" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                                  История компании
+                                  {t("header.aboutHistory")}
                                 </Link>
                               </NavigationMenuLink>
                             </li>
                             <li>
                               <NavigationMenuLink asChild>
                                 <Link to="/about?tab=mission" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                                  Миссия и ценности
+                                  {t("header.aboutMission")}
                                 </Link>
                               </NavigationMenuLink>
                             </li>
                           </ul>
                         </div>
                         <div>
-                          <h3 className="font-semibold text-foreground mb-4">Документы</h3>
+                          <h3 className="font-semibold text-foreground mb-4">{t("header.documents")}</h3>
                           <ul className="space-y-2">
                             <li>
                               <NavigationMenuLink asChild>
                                 <Link to="/contacts" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                                  Реквизиты
+                                  {t("header.requisites")}
                                 </Link>
                               </NavigationMenuLink>
                             </li>
                           </ul>
                         </div>
                         <div>
-                          <h3 className="font-semibold text-foreground mb-4">Пресс-центр</h3>
+                          <h3 className="font-semibold text-foreground mb-4">{t("header.pressCenter")}</h3>
                           <ul className="space-y-2">
                             <li>
                               <NavigationMenuLink asChild>
                                 <Link to="/articles" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                                  Статьи
+                                  {t("header.articles")}
                                 </Link>
                               </NavigationMenuLink>
                             </li>
                             <li>
                               <NavigationMenuLink asChild>
                                 <Link to="/projects" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                                  Реализованные проекты
+                                  {t("header.projects")}
                                 </Link>
                               </NavigationMenuLink>
                             </li>
                             <li>
                               <NavigationMenuLink asChild>
                                 <Link to="/contacts" className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                                  Контакты
+                                  {t("header.contacts")}
                                 </Link>
                               </NavigationMenuLink>
                             </li>
@@ -174,11 +179,11 @@ const Header = () => {
               {/* Продукты и решения - простая ссылка */}
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
-                  <Link 
-                    to="/equipment" 
+                  <Link
+                    to="/equipment"
                     className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
                   >
-                    Продукты и решения
+                    {t("header.equipment")}
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
@@ -190,7 +195,7 @@ const Header = () => {
                     to="/services"
                     className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
                   >
-                    Услуги и сервисы
+                    {t("header.services")}
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
@@ -198,14 +203,14 @@ const Header = () => {
               {/* Новости */}
               <NavigationMenuItem>
                 <Link to="/news" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors px-4 py-2">
-                  Новости
+                  {t("header.news")}
                 </Link>
               </NavigationMenuItem>
 
               {/* Контакты */}
               <NavigationMenuItem>
                 <Link to="/contacts" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors px-4 py-2">
-                  Контакты
+                  {t("header.contacts")}
                 </Link>
               </NavigationMenuItem>
             </NavigationMenuList>
@@ -239,17 +244,17 @@ const Header = () => {
                 className="block text-sm font-medium text-foreground/80 hover:text-primary transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                О компании
+                {t("header.about")}
               </Link>
               <div className="pl-4 space-y-1">
                 <Link to="/about?tab=history" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
-                  История компании
+                  {t("header.aboutHistory")}
                 </Link>
                 <Link to="/about?tab=mission" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
-                  Миссия и ценности
+                  {t("header.aboutMission")}
                 </Link>
                 <Link to="/contacts" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
-                  Реквизиты
+                  {t("header.requisites")}
                 </Link>
               </div>
             </div>
@@ -261,17 +266,17 @@ const Header = () => {
                 className="block text-sm font-medium text-foreground/80 hover:text-primary transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Продукты и решения
+                {t("header.equipment")}
               </Link>
               <div className="pl-4 space-y-1">
                 <Link to="/equipment/category/pumps" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
-                  Насосное оборудование
+                  {t("header.pumps")}
                 </Link>
                 <Link to="/equipment/category/compressors" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
-                  Компрессорное оборудование
+                  {t("header.compressors")}
                 </Link>
                 <Link to="/equipment/category/valves" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>
-                  Трубопроводная арматура
+                  {t("header.valves")}
                 </Link>
               </div>
             </div>
@@ -282,7 +287,7 @@ const Header = () => {
               className="block text-sm font-medium text-foreground/80 hover:text-primary transition-colors py-2"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Услуги и сервисы
+              {t("header.services")}
             </Link>
 
             {/* Новости */}
@@ -291,7 +296,7 @@ const Header = () => {
               className="block text-sm font-medium text-foreground/80 hover:text-primary transition-colors py-2"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Новости
+              {t("header.news")}
             </Link>
 
             {/* Контакты */}
@@ -300,7 +305,7 @@ const Header = () => {
               className="block text-sm font-medium text-foreground/80 hover:text-primary transition-colors py-2"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Контакты
+              {t("header.contacts")}
             </Link>
           </nav>
         </div>

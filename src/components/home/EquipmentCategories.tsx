@@ -1,6 +1,7 @@
 "use client";
 
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api, getFileUrl } from "@/lib/api";
@@ -24,6 +25,7 @@ interface Equipment {
 
 /* ===== COMPONENT ===== */
 const EquipmentCategories = () => {
+  const { t } = useTranslation();
   const [groups, setGroups] = useState<Group[]>([]);
   const [equipment, setEquipment] = useState<Record<number, Equipment[]>>({});
   const [activeGroupId, setActiveGroupId] = useState<number | null>(null);
@@ -68,13 +70,13 @@ const EquipmentCategories = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
           <h2 className="text-2xl md:text-3xl font-bold">
-            Продукты и решения
+            {t("home.productsAndSolutions")}
           </h2>
           <Link
             to="/equipment"
             className="group inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary"
           >
-            Весь каталог
+            {t("home.fullCatalog")}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>

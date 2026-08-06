@@ -1,17 +1,20 @@
 import { Helmet } from "react-helmet-async";
+import { useTranslation } from "react-i18next";
 import HeroCarousel from "@/components/home/HeroCarousel";
 import EquipmentCategories from "@/components/home/EquipmentCategories";
 import PartnersSection from "@/components/home/PartnersSection";
 // import DeliveryMap from "@/components/home/DeliveryMap";
 
-const statsStrip = [
-  { value: "20+", label: "лет опыта" },
-  { value: "50+", label: "проектов" },
-  { value: "Полный цикл", label: "работ" },
-  { value: "Решения", label: "под ключ" },
-];
-
 const Index = () => {
+  const { t } = useTranslation();
+
+  const statsStrip = [
+    { value: "20+", label: t("home.yearsExperience") },
+    { value: "50+", label: t("home.projects") },
+    { value: t("home.fullCycle"), label: t("home.fullCycleLabel") },
+    { value: t("home.turnkeySolutions"), label: t("home.turnkeyLabel") },
+  ];
+
   return (
     <div className="min-h-screen">
       <Helmet>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { api, getFileUrl } from "@/lib/api";
 
 interface Partner {
@@ -10,6 +11,7 @@ interface Partner {
 }
 
 const PartnersSection = () => {
+  const { t } = useTranslation();
   const [partners, setPartners] = useState<Partner[]>([]);
 
   useEffect(() => {
@@ -29,7 +31,7 @@ const PartnersSection = () => {
     <section className="py-16 bg-muted">
       <div className="container">
         <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
-          Наши партнёры
+          {t("home.ourPartners")}
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
           {partners.map((partner) => (

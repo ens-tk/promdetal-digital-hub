@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
@@ -11,6 +12,7 @@ interface EquipmentItem {
 }
 
 const HeroCarousel = () => {
+  const { t } = useTranslation();
   const [items, setItems] = useState<EquipmentItem[]>([]);
   const [images, setImages] = useState<Record<number, string>>({});
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -91,7 +93,7 @@ const HeroCarousel = () => {
               <p className="text-lg md:text-xl mb-6 max-w-xl text-background/90">
                 {item.shortDescription}
               </p>
-              <Button className="w-fit">Подробнее</Button>
+              <Button className="w-fit">{t("home.readMore")}</Button>
             </div>
           </div>
         </div>
